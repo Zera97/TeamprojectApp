@@ -6,10 +6,13 @@ import android.util.Log;
 import android.widget.Button;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
@@ -24,38 +27,46 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        String ip = "";
-        int port = -1;
+        String ip = "192.168.0.12";
+        int port = 20201;
         Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
-        String response;
+        String response = "";
         try {
-
-
-            socket = new Socket(ip, port);
-            out = new PrintWriter(socket.getOutputStream(), true);
+            Log.e("Asynctasc","Hallo1");
+            InetAddress serverAddr = InetAddress.getByName(ip);
+            socket = new Socket(serverAddr, port);
+            out = new PrintWriter(socket.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (Exception e) {
-            return e.getMessage();
+            Log.e("Asynctasc","Hallo2");
+        } catch(UnknownHostException e) {
+            System.out.println("Unknown host: " + ip + " " + port);
+        } catch(IOException e) {
+            System.out.println("No I/O");
         }
 
         try {
-            out.print(new Integer(5).toString());
-            response = in.readLine();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-
-        try {
+            Log.e("Asynctasc","Hallo3");
+            out.write("Hallo");
             out.close();
+            Log.e("Asynctasc","Hallo4");
+            if(in.readLine() == null){
+                System.out.println("Server: " + "NULL");
+            }
+            Log.e("Asynctasc","Hallo5");
+        } catch (Exception e) {
+            Log.e("AsyncTask", "Fehler beim Senden/Empfangen");
+        }
+
+        try {
             in.close();
             socket.close();
         } catch (Exception e) {
             Log.e("AsyncTask", "Fehler beim Schließen der Streams/des Sockets.");
         }
-
-
+        Log.e("Asynctasc","Hallo6");
+        System.out.println(response);
         return response;
     }
 
