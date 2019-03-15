@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -27,7 +28,12 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        String ip = "192.168.0.12";
+        //String ip = "192.168.0.12"; //eos-noctis.de
+        try{
+            String a = Inet4Address.getByName("www.eos-noctis.de");
+        } catch (Exception e) {
+            Log.e("AsyncTask", "Fehler beim Senden/Empfangen");
+        }
         int port = 20201;
         Socket socket = null;
         PrintWriter out = null;
