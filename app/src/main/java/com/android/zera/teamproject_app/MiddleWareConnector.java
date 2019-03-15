@@ -31,6 +31,8 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         BufferedReader in = null;
         String response;
         try {
+
+
             socket = new Socket(ip, port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
