@@ -1,19 +1,38 @@
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent" >
 
-
     <Button
+        android:layout_alignParentStart="true"
         android:id="@+id/btn_verbindung"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TestVerbindung"
         android:onClick="TestVerbindung"/>
 
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/btn_verbindung"
+        android:text="HALLO"/>
+
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TSCHAU"
+        android:layout_toEndOf="@id/btn2"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TSCHAU2"
+        android:layout_toEndOf="@id/btn3"/>
 
 <org.osmdroid.views.MapView android:id="@+id/map"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android" />
 
-</LinearLayout>
+</RelativeLayout>
