@@ -107,37 +107,83 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
     }
 
     private void doDirksStuff(){
+        String ip = "192.168.0.12";
+        String ip2 = "46.167.0.87";
+        String ip3  ="";
+        InetAddress inet = null;
         try {
-            String ip = "192.168.0.12";
-            String ip2 = "46.167.0.87";
-            String ip3  ="";
-            InetAddress inet = Inet4Address.getByName("www.eos-noctis.de");
-            ip3 = inet.getHostAddress();
-            System.out.println("ip3: " + ip);
-            int port = 8080;
-            int port2 = 31896;
-            Socket s = new Socket(ip3,port2);
-            System.out.println("Socket erzeugt.");
-            DataOutputStream out = new DataOutputStream(s.getOutputStream());
-            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            System.out.println("Streams erzeugt.");
-            int input = 5;
+            inet = Inet4Address.getByName("www.eos-noctis.de");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return;
+        }
+        ip3 = inet.getHostAddress();
+        System.out.println("ip3: " + ip);
+        int port = 8080;
+        int port2 = 31896;
+        Socket s;
+        try {
+            s = new Socket(ip3,port2);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("Socket erzeugt.");
+        DataOutputStream out;
+        try {
+            out = new DataOutputStream(s.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        BufferedReader in;
+        try {
+            in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("Streams erzeugt.");
+        int input = 5;
+        try {
             out.writeInt(input);
-            System.out.println("Habe Input gesendet: " + input);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        try {
             out.flush();
-            String output = in.readLine();
-            System.out.println("Habe Output gelesen: " + output);
-            Integer inte = Integer.parseInt(output);
-            if(inte != null) {
-                System.out.println(input + " -> " + output);
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("Habe Input gesendet: " + input);
+        String output;
+        try {
+            output = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("Habe Output gelesen: " + output);
+        Integer inte = Integer.parseInt(output);
+        if(inte != null) {
+            System.out.println(input + " -> " + output);
+        }
+        try {
             out.close();
             in.close();
             s.close();
-            System.out.println("Alles geschlossen.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
         }
-        catch(Exception e) {        }
+        System.out.println("Alles geschlossen.");
     }
+
     @Override
     protected void onPostExecute(String result) {
         Activity activity = parentActivity.get();
