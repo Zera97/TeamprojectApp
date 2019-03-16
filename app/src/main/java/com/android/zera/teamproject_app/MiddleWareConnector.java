@@ -6,9 +6,9 @@ import android.util.Log;
 import android.widget.Button;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -106,6 +106,38 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         return response;
     }
 
+    private void doDirksStuff(){
+        try {
+            String ip = "192.168.0.12";
+            String ip2 = "46.167.0.87";
+            String ip3  ="";
+            InetAddress inet = Inet4Address.getByName("www.eos-noctis.de");
+            ip3 = inet.getHostAddress();
+            System.out.println("ip3: " + ip);
+            int port = 8080;
+            int port2 = 31896;
+            Socket s = new Socket(ip3,port2);
+            System.out.println("Socket erzeugt.");
+            DataOutputStream out = new DataOutputStream(s.getOutputStream());
+            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            System.out.println("Streams erzeugt.");
+            int input = 5;
+            out.writeInt(input);
+            System.out.println("Habe Input gesendet: " + input);
+            out.flush();
+            String output = in.readLine();
+            System.out.println("Habe Output gelesen: " + output);
+            Integer inte = Integer.parseInt(output);
+            if(inte != null) {
+                System.out.println(input + " -> " + output);
+            }
+            out.close();
+            in.close();
+            s.close();
+            System.out.println("Alles geschlossen.");
+        }
+        catch(Exception e) {        }
+    }
     @Override
     protected void onPostExecute(String result) {
         Activity activity = parentActivity.get();
