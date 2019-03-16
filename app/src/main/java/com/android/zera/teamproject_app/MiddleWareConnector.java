@@ -25,7 +25,6 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         parentActivity = new WeakReference<Activity>(activity);
     }
 
-
     @Override
     protected String doInBackground(String... strings) {
         //String ip = "192.168.0.12"; //eos-noctis.de
