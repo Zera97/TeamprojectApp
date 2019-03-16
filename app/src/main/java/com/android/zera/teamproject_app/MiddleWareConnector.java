@@ -31,30 +31,31 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        //String ip = "192.168.0.12"; //eos-noctis.de
+
         InetAddress inet = null;
-        InetAddress my = null;
         String ip = "";
+        int port = 31896;
+
         try {
             Log.e(TAG, "IP erzeugen");
             inet = Inet4Address.getByName("www.eos-noctis.de");
-            my = InetAddress.getLocalHost();
             ip = inet.getHostAddress();
             System.out.println("ip: " + ip);
         } catch (Exception e) {
             Log.e(TAG, "Fehler beim Erzeugen der IP-Adresse.");
+            e.printStackTrace();
         }
-        int port = 31986;
+
         //ip = "192.168.0.12"; // nur in Fabis WLAN
         //ip = "46.167.0.87"; // von nirgends
 
         Socket socket = null;
-        PrintWriter out = null;
-        BufferedReader in = null;
+        //PrintWriter out = null;
+        //BufferedReader in = null;
         String response = "";
+
         try {
             Log.e(TAG, "Socket erzeugen");
-            //socket = new Socket(inet, port);//, my,2000);
             socket = new Socket();
             System.out.println("izz da");
             socket.connect(new InetSocketAddress(ip, port), 20000);
@@ -66,13 +67,15 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
             return "No Socket";
         }
+        /*
         try {
             Log.e(TAG, "outStream erzeugen");
-            out = new PrintWriter(socket.getOutputStream(), true);
+            //out = new PrintWriter(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
             return "Fehler";
-        }
+        } */
+        /*
         try {
             Log.e(TAG, "inStream erzeugen");
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -80,21 +83,20 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
             return "Fehler";
         }
-
+        */
         try {
             Log.e(TAG, "Hallo3");
-            byte b = 25;
-            out.write(b);
-            out.flush();
+            socket.getOutputStream().write(1);
+            socket.getOutputStream().flush();
             Log.e(TAG, "Hallo4");
-            System.out.println("Erg: " + in.readLine());
+            System.out.println("Erg: " + socket.getInputStream().read());
             Log.e(TAG, "Hallo5");
         } catch (Exception e) {
             Log.e(TAG, "Fehler beim Senden/Empfangen");
         }
 
         try {
-            in.close();
+            //in.close();
             socket.close();
         } catch (Exception e) {
             Log.e(TAG, "Fehler beim Schließen der Streams/des Sockets.");
