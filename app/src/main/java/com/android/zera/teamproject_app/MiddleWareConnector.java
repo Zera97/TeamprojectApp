@@ -44,7 +44,8 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             Log.e(this.getClass().toString(),"Fehler beim Erzeugen der IP-Adresse.");
         }
         int port = 8080;
-        ip = "192.168.0.12";
+        ip = "192.168.0.12"; // nur in Fabis WLAN
+        ip = "46.167.0.87"; // von nirgends
 
         Socket socket = null;
         PrintWriter out = null;
