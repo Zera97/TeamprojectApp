@@ -28,20 +28,22 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... strings) {
         //String ip = "192.168.0.12"; //eos-noctis.de
+        String ip = "";
         try{
-            String a = Inet4Address.getByName("www.eos-noctis.de");
+            InetAddress inet = Inet4Address.getByName("www.eos-noctis.de");
+            ip = inet.getHostAddress();
         } catch (Exception e) {
-            Log.e("AsyncTask", "Fehler beim Senden/Empfangen");
+            Log.e(this.getClass().toString(),"Fehler beim Erzeugen der IP-Adresse.");
         }
-        int port = 20201;
+        int port = 31896;
+
         Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
         String response = "";
         try {
             Log.e("Asynctasc","Hallo1");
-            InetAddress serverAddr = InetAddress.getByName(ip);
-            socket = new Socket(serverAddr, port);
+            socket = new Socket(ip, port);
             out = new PrintWriter(socket.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             Log.e("Asynctasc","Hallo2");
