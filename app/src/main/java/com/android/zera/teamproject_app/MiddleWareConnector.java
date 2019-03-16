@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -25,39 +26,72 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         parentActivity = new WeakReference<Activity>(activity);
     }
 
+
+
     @Override
     protected String doInBackground(String... strings) {
         //String ip = "192.168.0.12"; //eos-noctis.de
+        InetAddress inet = null;
+        InetAddress my = null;
         String ip = "";
         try{
-            InetAddress inet = Inet4Address.getByName("www.eos-noctis.de");
+            Log.e("Asynctasc", "IP erzeugen");
+            inet = Inet4Address.getByName("www.eos-noctis.de");
+            my = InetAddress.getLocalHost();
             ip = inet.getHostAddress();
+            System.out.println("ip: " + ip);
         } catch (Exception e) {
             Log.e(this.getClass().toString(),"Fehler beim Erzeugen der IP-Adresse.");
         }
-        int port = 31896;
+        int port = 8080;
+        ip = "192.168.0.12";
 
         Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
         String response = "";
         try {
-            Log.e("Asynctasc","Hallo1");
-            socket = new Socket(ip, port);
-            out = new PrintWriter(socket.getOutputStream(),true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            Log.e("Asynctasc","Hallo2");
-        } catch(UnknownHostException e) {
+            Log.e("Asynctasc", "Socket erzeugen");
+            //socket = new Socket(inet, port);//, my,2000);
+            socket = new Socket();
+            System.out.println("izz da");
+            socket.connect(new InetSocketAddress(ip,port),20000);
+            System.out.println("izz da 2");
+        }catch(UnknownHostException e) {
             System.out.println("Unknown host: " + ip + " " + port);
+            return "No Socket";
+        } catch(IOException e) {
+            e.printStackTrace();
+            return "No Socket";
+        }
+        try {
+            Log.e("Asynctasc", "outStream erzeugen");
+            out = new PrintWriter(socket.getOutputStream(),true);
+        }catch(UnknownHostException e) {
+            System.out.println("Unknown host: " + ip + " " + port);
+            return "Fehler";
         } catch(IOException e) {
             System.out.println("No I/O");
+            return "Fehler";
+        }
+        try {
+            Log.e("Asynctasc", "inStream erzeugen");
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        }catch(UnknownHostException e) {
+            System.out.println("Unknown host: " + ip + " " + port);
+            return "Fehler";
+        } catch(IOException e) {
+            System.out.println("No I/O");
+            return "Fehler";
         }
 
         try {
             Log.e("Asynctasc","Hallo3");
-            out.write("Hallo");
-            out.close();
+            byte b = 25;
+            out.write(b);
+            out.flush();
             Log.e("Asynctasc","Hallo4");
+            System.out.println("Erg: " + in.readLine());
             if(in.readLine() == null){
                 System.out.println("Server: " + "NULL");
             }
