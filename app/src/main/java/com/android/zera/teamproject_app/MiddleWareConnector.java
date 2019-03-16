@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,6 +33,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... strings) {
 
+        /*
         InetAddress inet = null;
         String ip = "";
         int port = 31896;
@@ -83,7 +85,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
             return "Fehler";
         }
-        */
+
         try {
             Log.e(TAG, "Hallo3");
             socket.getOutputStream().write(1);
@@ -103,7 +105,11 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         }
         Log.e(TAG, "Hallo6");
         System.out.println(response);
-        return response;
+        */
+
+        //return response;
+        doDirksStuff();
+        return null;
     }
 
     private void doDirksStuff(){
@@ -139,15 +145,17 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
             return;
         }
-        BufferedReader in;
+        //BufferedReader in;
+        DataInputStream in;
         try {
-            in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            //in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            in = new DataInputStream(s.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
         System.out.println("Streams erzeugt.");
-        int input = 5;
+        int input = 8;
         try {
             out.writeInt(input);
         } catch (IOException e) {
@@ -161,18 +169,14 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             return;
         }
         System.out.println("Habe Input gesendet: " + input);
-        String output;
+        int output;
         try {
-            output = in.readLine();
+            output = in.readInt();
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
         System.out.println("Habe Output gelesen: " + output);
-        Integer inte = Integer.parseInt(output);
-        if(inte != null) {
-            System.out.println(input + " -> " + output);
-        }
         try {
             out.close();
             in.close();
