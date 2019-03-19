@@ -96,9 +96,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String createJSON(MSGData obj){
+        StringBuilder sb = new StringBuilder();
         Gson gson = new Gson();
         String json = gson.toJson(obj);
-        return json;
+        sb.append("{");
+        sb.append("\"id\":\"" + 2 + "\",");
+        sb.append("\"data\": [" + "\n");
+        sb.append(json);
+        sb.append("]" + "\n");
+        sb.append("}");
+        return sb.toString();
     }
 
     public void onResume(){
