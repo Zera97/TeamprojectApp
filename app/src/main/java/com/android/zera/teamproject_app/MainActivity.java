@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
+
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -88,11 +90,16 @@ public class MainActivity extends AppCompatActivity {
     public void TestVerbindung(View v) {
         //boolean b = haveNetworkConnection();
         //System.out.println(b ? "ja" : "nein");
-        new MiddleWareConnector(this).execute();
-
+        MSGData dataObject = new MSGData(5,"Jens");
+        String msg = createJSON(dataObject);
+        new MiddleWareConnector(this).execute(msg);
     }
 
-
+    private String createJSON(MSGData obj){
+        Gson gson = new Gson();
+        String json = gson.toJson(obj);
+        return json;
+    }
 
     public void onResume(){
         super.onResume();
