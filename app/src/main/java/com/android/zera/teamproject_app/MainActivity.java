@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //referenz zum einfügen der Bushaltestellen
+
+        // https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -90,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
         StringBuilder sb = new StringBuilder();
         Gson gson = new Gson();
         String json = gson.toJson(obj);
+        //Konvertiert JSON String in Object
+        //MSGData test = gson.fromJson(json,MSGData.class);
+        //System.out.println("Hallo:" + json);
         sb.append("{");
         sb.append("\"id\":\"" + 2 + "\",");
         sb.append("\"data\": [" + "\n");

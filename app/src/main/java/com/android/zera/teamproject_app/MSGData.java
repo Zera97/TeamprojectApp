@@ -10,8 +10,14 @@ public class MSGData {
         this.zahl = zahl;
     }
 
-
-    /*
+    @Override
+    public String toString() {
+        return "MSGData{" +
+                "zahl=" + zahl +
+                ", name='" + name + '\'' +
+                '}';
+    }
+/*
      <Button
         android:id="@+id/btn2"
         android:layout_width="wrap_content"
