@@ -16,6 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding{
+        enabled = true
+    }
 }
 
 dependencies {
@@ -31,5 +34,5 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-mapsforge:6.0.3'
     implementation 'org.osmdroid:osmdroid-geopackage:6.0.3'
     implementation 'com.google.code.gson:gson:2.8.5'
-
+    implementation 'com.android.databinding:compiler:1.0-rc0'
 }

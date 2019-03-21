@@ -1,11 +1,24 @@
 package com.android.zera.teamproject_app;
 
-public class BusRouteSpinnerViewModel {
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+
+public class BusRouteSpinnerViewModel extends BaseObservable {
     public static String line = "Linie";
     public int routeNumber = -1;
-    public boolean seleceted = false;
-    public BusRouteSpinnerViewModel(int number, boolean selected){
+
+    private Boolean checked = false;
+    @Bindable
+    public Boolean getChecked() {
+        return this.checked;
+    }
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
+        //notifyPropertyChanged(BR.checked);
+    }
+
+    public BusRouteSpinnerViewModel(int number, boolean checked){
         this.routeNumber = number;
-        this.seleceted = selected;
+        this.checked = checked;
     }
 }

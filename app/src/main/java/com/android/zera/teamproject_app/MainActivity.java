@@ -2,6 +2,7 @@ package com.android.zera.teamproject_app;
 
 import android.Manifest;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.android.zera.teamproject_app.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
 
 import org.osmdroid.api.IMapController;
@@ -23,6 +25,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ActivityMainBinding activityMainBinding;
     private final String TAG = this.getClass().getSimpleName();
     private MapView map = null;
     private IMapController mapController = null;
@@ -36,7 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
         // https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        BusRouteSpinnerViewModel bus = new BusRouteSpinnerViewModel(201,true);
+        activityMainBinding.setBusRoute(bus);
+
 
         ctx = getApplicationContext();
 
