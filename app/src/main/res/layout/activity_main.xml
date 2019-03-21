@@ -1,14 +1,3 @@
-<layout>
-    <data>
-        <variable
-            name="busroute"
-            type="com.android.zera.teamproject_app.BusRouteSpinnerViewModel"
-            />
-        <variable
-            name="busrouteList"
-            type="com.android.zera.teamproject_app.BusRouteList"
-            />
-    </data>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_fragment"
@@ -27,12 +16,6 @@
             android:layout_height="wrap_content"
             android:text="TestVerbindung"
             android:onClick="TestVerbindung"/>
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{busroute.name}"
-            android:checked="@{busroute.checked}"
-            />
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
@@ -59,23 +42,3 @@
         android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android" />
 </RelativeLayout>
-</layout>
-
-
-<!--
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/balken"
-        android:layout_alignParentStart="true"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorPrimaryDark">
-
-    </LinearLayout>
-        <CheckedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{busroute.name}"
-            android:checked="@{busroute.checked}"
-            />
--->
