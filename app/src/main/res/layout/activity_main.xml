@@ -9,62 +9,32 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_fragment"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent" >
-
-    <include
-        layout="@layout/app_bar"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_fragment"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="top" />
+        android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        >
-        <Button
-            android:id="@+id/btn_verbindung"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TestVerbindung"
-            android:onClick="TestVerbindung"/>
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Spinner
-            android:id="@+id/dropdownLatest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Spinner
-            android:id="@+id/dropdownFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <org.osmdroid.views.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar" />
 
-    </android.support.v7.widget.Toolbar>
+        <include
+            layout="@layout/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="top" />
 
+    </RelativeLayout>
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/map"
-        android:visibility="gone"
-        android:layout_below="@id/toolbar"
-        android:layout_width="match_parent"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android" />
-</RelativeLayout>
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/siedebar_header"
+        app:menu="@menu/sidebar_menu" />
 
-<android.support.design.widget.NavigationView
-android:id="@+id/nav_view"
-android:layout_width="wrap_content"
-android:layout_height="match_parent"
-android:layout_gravity="start"
-android:fitsSystemWindows="true"
-app:headerLayout="@layout/siedebar_header"
-app:menu="@menu/sidebar_menu" />
-
-    </android.support.v4.widget.DrawerLayout>
+</android.support.v4.widget.DrawerLayout>
