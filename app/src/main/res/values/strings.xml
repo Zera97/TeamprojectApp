@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Teamproject-App</string>
+    <string-array name="fragments">
+        <item>Fragment 1</item>
+        <item>Fragment 2</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

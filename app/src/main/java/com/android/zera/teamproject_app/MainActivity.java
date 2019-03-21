@@ -8,8 +8,13 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.android.zera.teamproject_app.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
@@ -22,9 +27,15 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+//import com.android.zera.teamproject_app.databinding.ActivityMainBinding;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    Spinner spinner;
+    FragmentOne f1;
+    FragmentTwo f2;
+    //data binding
     private ActivityMainBinding activityMainBinding;
     private final String TAG = this.getClass().getSimpleName();
     private MapView map = null;
@@ -40,9 +51,61 @@ public class MainActivity extends AppCompatActivity {
         // https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
+
+        Log.e(TAG,"lol");
+        spinner = (Spinner) findViewById(R.id.spinner);
+        f1 = new FragmentOne();
+        f2 = new FragmentTwo();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                MainActivity.this,
+                R.layout.custom_spinner,
+                getResources().getStringArray(R.array.fragments));
+        Log.e(TAG,"Nope1");
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Log.e(TAG,"Nope2");
+        if(spinner == null){
+            Log.e(TAG,"Sinner is null");
+        }
+        spinner.setAdapter(adapter);
+        Log.e(TAG,"Nope3");
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        setFragment(f1);
+                        break;
+                    case 1:
+                        setFragment(f2);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
+
         activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+
+        BusRouteList b = new BusRouteList();
+
+        b.routes.add(new BusRouteSpinnerViewModel(201,true));
+        b.routes.add(new BusRouteSpinnerViewModel(202,false));
+        b.routes.add(new BusRouteSpinnerViewModel(203,false));
+        b.routes.add(new BusRouteSpinnerViewModel(204,true));
+        b.routes.add(new BusRouteSpinnerViewModel(205,false));
+
+        activityMainBinding.setBusrouteList(b);
+
         BusRouteSpinnerViewModel bus = new BusRouteSpinnerViewModel(201,true);
-        activityMainBinding.setBusRoute(bus);
+        activityMainBinding.setBusroute(bus);
 
 
         ctx = getApplicationContext();
@@ -68,6 +131,15 @@ public class MainActivity extends AppCompatActivity {
         this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
+    }
+
+    public void setFragment(Fragment fragment){
+        return;
+        /*
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_fragment,fragment);
+        fragmentTransaction.commit();
+        */
     }
 
     private boolean haveNetworkConnection() {
@@ -110,6 +182,11 @@ public class MainActivity extends AppCompatActivity {
         sb.append(header);
         //Konvertiert JSON String in Object
         //MSGData test = gson.fromJson(json,MSGData.class);
+
+        //Ohne klasse, aber jetzt kann man natürlich nicht o.messageID machen
+        //object o = gson.fromJson(json);
+
+
         //System.out.println("Hallo:" + json);
 
         return sb.toString();
