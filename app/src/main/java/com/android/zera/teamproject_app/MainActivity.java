@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.util.ArrayList;
 
 //import com.android.zera.teamproject_app.databinding.ActivityMainBinding;
 
@@ -50,49 +53,24 @@ public class MainActivity extends AppCompatActivity {
 
         // https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-
-        Log.e(TAG,"lol");
-        spinner = (Spinner) findViewById(R.id.spinner);
-        f1 = new FragmentOne();
-        f2 = new FragmentTwo();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                MainActivity.this,
-                R.layout.custom_spinner,
-                getResources().getStringArray(R.array.fragments));
-        Log.e(TAG,"Nope1");
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Log.e(TAG,"Nope2");
-        if(spinner == null){
-            Log.e(TAG,"Sinner is null");
-        }
-        spinner.setAdapter(adapter);
-        Log.e(TAG,"Nope3");
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        setFragment(f1);
-                        break;
-                    case 1:
-                        setFragment(f2);
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-
-
-
         activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+
+        final String[] select_qualification = {
+                "Hallo", "Dirk", "201", "202", "203",
+                "204", "205"};
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+
+        ArrayList<favSpinnerData> listVOs = new ArrayList<>();
+
+        for (int i = 0; i < select_qualification.length; i++) {
+            favSpinnerData data = new favSpinnerData();
+            data.setTitle(select_qualification[i]);
+            data.setSelected(false);
+            listVOs.add(data);
+        }
+        myFavSpinnerAdapter myAdapter = new myFavSpinnerAdapter(this, 0,listVOs);
+        spinner.setAdapter(myAdapter);
+
 
         BusRouteList b = new BusRouteList();
 
@@ -134,12 +112,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setFragment(Fragment fragment){
-        return;
-        /*
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.main_fragment,fragment);
         fragmentTransaction.commit();
-        */
+
     }
 
     private boolean haveNetworkConnection() {
