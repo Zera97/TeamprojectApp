@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         //referenz zum einfügen der Bushaltestellen
-
         // https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
+
         super.onCreate(savedInstanceState);
         activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
 
