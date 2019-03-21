@@ -1,5 +1,32 @@
 package com.android.zera.teamproject_app;
 
+
+
+public class CommunicationParams {
+    public int commandCode = -1;
+    public long arriveUntil = -1;
+    public long earliestDeparture = -1;
+
+    public Integer StartBusStop = null;
+    public Integer DestinationBusStop = null;
+    public Integer InformationAboutBusStop = null;
+    public ArrayList<Integer> Linien = null;
+
+    private String toJSON() {
+//		StringBuilder s = new StringBuilder("");
+//		s.append("{");
+//		s.append("\"" + "commandCode" + "\": " + commandCode + ", ");
+//		s.append("\"" + "arriveUntil" + "\": " + arriveUntil + ", ");
+//		s.append("\"" + "earliestDeparture" + "\": " + earliestDeparture + ", ");
+//		s.append("\"" + "StartBusStop" + "\":{\"intValue\"" + StartBusStop + "} ");
+//		s.append("}");
+//		return s.toString();
+        return "end";
+    }
+}
+
+
+
 public class MSGData {
 
     public int zahl;
