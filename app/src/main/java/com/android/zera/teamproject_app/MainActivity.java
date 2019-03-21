@@ -85,15 +85,22 @@ public class MainActivity extends AppCompatActivity {
     public void TestVerbindung(View v) {
         //boolean b = haveNetworkConnection();
         //System.out.println(b ? "ja" : "nein");
-        MSGData dataObject = new MSGData(5,"Jens");
-        String msg = createJSON(dataObject);
-        new MiddleWareConnector(this).execute(msg);
+        System.out.println(createJSON(new MSGData()));
+        new MiddleWareConnector(this).execute();
     }
 
-    private String createJSON(MSGData obj){
+    private String createJSON(MSGData dataObj){
         StringBuilder sb = new StringBuilder();
         Gson gson = new Gson();
-        String json = gson.toJson(obj);
+        MSGHeader headerOjb = new MSGHeader(1,1,1,dataObj);
+        String header = gson.toJson(headerOjb);
+        String data = gson.toJson(dataObj);
+        /*
+        sb.append(header.substring(0, header.length() - 1));
+        sb.append(",\"Data\":");
+        sb.append(data);
+        sb.append("}"); */
+        sb.append(header);
         //Konvertiert JSON String in Object
         //MSGData test = gson.fromJson(json,MSGData.class);
         //System.out.println("Hallo:" + json);

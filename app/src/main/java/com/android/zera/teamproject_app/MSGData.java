@@ -1,68 +1,72 @@
 package com.android.zera.teamproject_app;
 
-
-
-public class CommunicationParams {
-    public int commandCode = -1;
-    public long arriveUntil = -1;
-    public long earliestDeparture = -1;
-
-    public Integer StartBusStop = null;
-    public Integer DestinationBusStop = null;
-    public Integer InformationAboutBusStop = null;
-    public ArrayList<Integer> Linien = null;
-
-    private String toJSON() {
-//		StringBuilder s = new StringBuilder("");
-//		s.append("{");
-//		s.append("\"" + "commandCode" + "\": " + commandCode + ", ");
-//		s.append("\"" + "arriveUntil" + "\": " + arriveUntil + ", ");
-//		s.append("\"" + "earliestDeparture" + "\": " + earliestDeparture + ", ");
-//		s.append("\"" + "StartBusStop" + "\":{\"intValue\"" + StartBusStop + "} ");
-//		s.append("}");
-//		return s.toString();
-        return "end";
-    }
-}
-
-
+import java.util.ArrayList;
 
 public class MSGData {
+    private int commandCode = -1;
+    private long arriveUntil = -1;
+    private long earliestDeparture = -1;
 
-    public int zahl;
-    public String name;
+    private Integer StartBusStop = null;
+    private Integer DestinationBusStop = null;
+    private Integer InformationAboutBusStop = null;
+    private ArrayList<Integer> Linien = null;
 
-    public MSGData(int zahl,String name){
-        this.name = name;
-        this.zahl = zahl;
+
+
+    public int getCommandCode() {
+        return commandCode;
     }
 
-    @Override
-    public String toString() {
-        return "MSGData{" +
-                "zahl=" + zahl +
-                ", name='" + name + '\'' +
-                '}';
+    public void setCommandCode(int commandCode) {
+        this.commandCode = commandCode;
     }
-/*
-     <Button
-        android:id="@+id/btn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/btn_verbindung"
-        android:text="HALLO"/>
 
-    <Button
-        android:id="@+id/btn3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TSCHAU"
-        android:layout_toEndOf="@id/btn2"/>
+    public ArrayList<Integer> getLinien() {
+        return Linien;
+    }
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TSCHAU2"
-        android:layout_toEndOf="@id/btn3"/>
-     */
+    public void setLinien(ArrayList<Integer> linien) {
+        Linien = linien;
+    }
+
+    public long getArriveUntil() {
+        return arriveUntil;
+    }
+
+    public void setArriveUntil(long arriveUntil) {
+        this.arriveUntil = arriveUntil;
+    }
+
+    public long getEarliestDeparture() {
+        return earliestDeparture;
+    }
+
+    public void setEarliestDeparture(long earliestDeparture) {
+        this.earliestDeparture = earliestDeparture;
+    }
+
+    public Integer getStartBusStop() {
+        return StartBusStop;
+    }
+
+    public void setStartBusStop(Integer startBusStop) {
+        StartBusStop = startBusStop;
+    }
+
+    public Integer getDestinationBusStop() {
+        return DestinationBusStop;
+    }
+
+    public void setDestinationBusStop(Integer destinationBusStop) {
+        DestinationBusStop = destinationBusStop;
+    }
+
+    public Integer getInformationAboutBusStop() {
+        return InformationAboutBusStop;
+    }
+
+    public void setInformationAboutBusStop(Integer informationAboutBusStop) {
+        InformationAboutBusStop = informationAboutBusStop;
+    }
 }

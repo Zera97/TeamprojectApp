@@ -28,7 +28,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        System.out.println(strings[0]);
+       // System.out.println(strings[0]);
 
         String response = sendMessage();
         return response;
