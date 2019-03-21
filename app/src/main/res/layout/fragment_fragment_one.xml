@@ -6,10 +6,11 @@
     tools:context=".FragmentOne">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <CheckBox
+        android:layout_width="40px"
+        android:layout_height="40px"
         android:gravity="center"
-        android:text="Fragment One" />
+        android:checked="true"
+        android:text="Fragment One"/>
 
 </FrameLayout>

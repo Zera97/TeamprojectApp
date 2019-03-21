@@ -10,8 +10,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.android.zera.teamproject_app.favSpinnerData;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,10 +67,13 @@ public class myFavSpinnerAdapter extends ArrayAdapter<favSpinnerData> {
             holder.mCheckBox.setVisibility(View.VISIBLE);
         }
         holder.mCheckBox.setTag(position);
-        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.mCheckBox.setOnCheckedChangeListener(
+
+                new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 int getPosition = (Integer) buttonView.getTag();
 
                 if (!isFromView) {
@@ -81,6 +82,8 @@ public class myFavSpinnerAdapter extends ArrayAdapter<favSpinnerData> {
                 }
             }
         });
+
+
         return convertView;
     }
 

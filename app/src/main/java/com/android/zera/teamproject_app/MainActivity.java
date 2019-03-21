@@ -11,10 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.android.zera.teamproject_app.databinding.ActivityMainBinding;
@@ -56,8 +53,11 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
 
         final String[] select_qualification = {
-                "Hallo", "Dirk", "201", "202", "203",
-                "204", "205"};
+                "Schließen", "201", "202", "203",
+                "204", "205", "206", "201", "202", "203",
+                "204", "205", "206", "201", "202", "203",
+                "204", "205", "206", "201", "202", "203",
+                "204", "205", "206"};
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
 
         ArrayList<favSpinnerData> listVOs = new ArrayList<>();
@@ -69,11 +69,10 @@ public class MainActivity extends AppCompatActivity {
             listVOs.add(data);
         }
         myFavSpinnerAdapter myAdapter = new myFavSpinnerAdapter(this, 0,listVOs);
+
+
         spinner.setAdapter(myAdapter);
-
-
         BusRouteList b = new BusRouteList();
-
         b.routes.add(new BusRouteSpinnerViewModel(201,true));
         b.routes.add(new BusRouteSpinnerViewModel(202,false));
         b.routes.add(new BusRouteSpinnerViewModel(203,false));

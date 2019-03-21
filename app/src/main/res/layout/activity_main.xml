@@ -51,11 +51,13 @@
     </android.support.v7.widget.Toolbar>
 
 
-<org.osmdroid.views.MapView android:id="@+id/map"
-    android:layout_below="@id/toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:visibility="gone"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
 </RelativeLayout>
 </layout>
 
