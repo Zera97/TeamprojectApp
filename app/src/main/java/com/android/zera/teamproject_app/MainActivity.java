@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity
                 "204", "205", "206", "201", "202", "203",
                 "204", "205", "206", "201", "202", "203",
                 "204", "205", "206"};
-        //Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
 
         ArrayList<favSpinnerData> listVOs = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         myFavSpinnerAdapter myAdapter = new myFavSpinnerAdapter(this, 0,listVOs);
 
 
-       // spinner.setAdapter(myAdapter);
+        spinner.setAdapter(myAdapter);
 
         ctx = getApplicationContext();
 

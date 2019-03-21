@@ -113,10 +113,10 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        /*
+
         Activity activity = parentActivity.get();
         Button txt = (Button) activity.findViewById(R.id.btn_verbindung);
-        txt.setText(result); */
+        txt.setText(result);
     }
 
     @Override
