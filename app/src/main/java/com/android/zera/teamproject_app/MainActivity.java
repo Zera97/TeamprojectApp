@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         //Konvertiert JSON String in Object
         //MSGData test = gson.fromJson(json,MSGData.class);
         //System.out.println("Hallo:" + json);
+
         return sb.toString();
     }
 
