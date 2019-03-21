@@ -93,7 +93,6 @@ public class myFavSpinnerAdapter extends ArrayAdapter<favSpinnerData> {
                 System.out.print(f.getTitle());
             }
         }
-        ;
     }
 
     private class ViewHolder {
