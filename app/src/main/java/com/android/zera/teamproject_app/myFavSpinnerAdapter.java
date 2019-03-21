@@ -67,15 +67,14 @@ public class myFavSpinnerAdapter extends ArrayAdapter<favSpinnerData> {
             holder.mCheckBox.setVisibility(View.VISIBLE);
         }
         holder.mCheckBox.setTag(position);
-        holder.mCheckBox.setOnCheckedChangeListener(
 
-                new CompoundButton.OnCheckedChangeListener() {
+        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 int getPosition = (Integer) buttonView.getTag();
-
+                //this.updateSelection();
                 if (!isFromView) {
                     listState.get(position).setSelected(isChecked);
                     Log.e("TEST","Hallo" + getPosition + " " + listState.get(getPosition).getTitle());
@@ -85,6 +84,16 @@ public class myFavSpinnerAdapter extends ArrayAdapter<favSpinnerData> {
 
 
         return convertView;
+    }
+
+    private void updateSelection() {
+        Log.e("myFavSpinnerAdapter", "Geschafft");
+        for(favSpinnerData f : this.listState){
+            if(f.isSelected(){
+                System.out.print(f.getTitle());
+            }
+        }
+        ;
     }
 
     private class ViewHolder {
