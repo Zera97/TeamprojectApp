@@ -1,5 +1,4 @@
 package com.android.zera.teamproject_app;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +12,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class myFavSpinnerAdapter extends ArrayAdapter<favSpinnerData> {
+public class BusLineSpinnerAdapter extends ArrayAdapter<BusLineSpinnerData> {
     private Context mContext;
-    private ArrayList<favSpinnerData> listState;
-    private myFavSpinnerAdapter myAdapter;
+    private ArrayList<BusLineSpinnerData> listState;
+    private BusLineSpinnerAdapter myAdapter;
     private boolean isFromView = false;
 
-    public myFavSpinnerAdapter(Context context, int resource, List<favSpinnerData> objects) {
+    public BusLineSpinnerAdapter(Context context, int resource, List<BusLineSpinnerData> objects) {
         super(context, resource, objects);
         this.mContext = context;
-        this.listState = (ArrayList<favSpinnerData>) objects;
+        this.listState = (ArrayList<BusLineSpinnerData>) objects;
         this.myAdapter = this;
     }
 
@@ -45,9 +44,9 @@ public class myFavSpinnerAdapter extends ArrayAdapter<favSpinnerData> {
             LayoutInflater layoutInflator = LayoutInflater.from(mContext);
             convertView = layoutInflator.inflate(R.layout.fav_spinner, null);
             holder = new ViewHolder();
-            holder.mTextView = (TextView) convertView
+            holder.mTextView = convertView
                     .findViewById(R.id.text);
-            holder.mCheckBox = (CheckBox) convertView
+            holder.mCheckBox = convertView
                     .findViewById(R.id.checkbox);
             convertView.setTag(holder);
         } else {
@@ -87,13 +86,12 @@ public class myFavSpinnerAdapter extends ArrayAdapter<favSpinnerData> {
     }
 
     private void updateSelection() {
-        Log.e("myFavSpinnerAdapter", "Geschafft");
-        for(favSpinnerData f : this.listState){
-            if(f.isSelected(){
+        Log.e("BusLineSpinnerAdapter", "Geschafft");
+        for(BusLineSpinnerData f : this.listState){
+            if(f.isSelected()){
                 System.out.print(f.getTitle());
             }
         }
-        ;
     }
 
     private class ViewHolder {

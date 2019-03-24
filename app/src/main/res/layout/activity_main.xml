@@ -39,18 +39,13 @@
                 android:text="TestVerbindung"
                 android:onClick="TestVerbindung"/>
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/BusLineSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Spinner
-                android:id="@+id/dropdownLatest"
+                android:id="@+id/FavoritsSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <Spinner
-                android:id="@+id/dropdownFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
         </LinearLayout>
 
     </RelativeLayout>

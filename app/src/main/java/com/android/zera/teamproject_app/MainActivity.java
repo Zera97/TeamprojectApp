@@ -2,7 +2,6 @@ package com.android.zera.teamproject_app;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity
     private MapView map = null;
     private IMapController mapController = null;
     private MyLocationNewOverlay mLocationOverlay = null;
-    private Context ctx;
+    private Context ctx = getApplicationContext();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_main);
 
-        //--------------------------------Sidebar---------------------------------------------------
+        //region Sidebar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -68,30 +66,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //-------------------------------Sidebar-Ende-----------------------------------------------
+        //endregion
 
-        final String[] select_qualification = {
-                "Schließen", "201", "202", "203",
-                "204", "205", "206", "201", "202", "203",
-                "204", "205", "206", "201", "202", "203",
-                "204", "205", "206", "201", "202", "203",
-                "204", "205", "206"};
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-
-        ArrayList<favSpinnerData> listVOs = new ArrayList<>();
-
-        for (int i = 0; i < select_qualification.length; i++) {
-            favSpinnerData data = new favSpinnerData();
-            data.setTitle(select_qualification[i]);
-            data.setSelected(false);
-            listVOs.add(data);
-        }
-        myFavSpinnerAdapter myAdapter = new myFavSpinnerAdapter(this, 0,listVOs);
-
-
-        spinner.setAdapter(myAdapter);
-
-        ctx = getApplicationContext();
+        this.initBusLineSlider();
+        this.initFavoritsSlider();
 
         ActivityCompat.requestPermissions(MainActivity.this, new String[] {
                 Manifest.permission.ACCESS_FINE_LOCATION},1);
@@ -183,7 +161,7 @@ public class MainActivity extends AppCompatActivity
         map.onPause();
     }
 
-    //--------------------------------Sidebar-Methoden----------------------------------------------
+    //region Sidebar-Methoden
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -238,5 +216,46 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    //--------------------------------Sidebar-Methoden-Ende-----------------------------------------
+    //endregion
+
+    private void initBusLineSlider(){
+        final int[] select_qualification = this.getAllBusLines();
+        Spinner spinner = findViewById(R.id.BusLineSpinner);
+        ArrayList<BusLineSpinnerData> listVOs = new ArrayList<>();
+        for (int i = 0; i < select_qualification.length; i++) {
+            BusLineSpinnerData data = new BusLineSpinnerData(select_qualification[i],false);
+            listVOs.add(data);
+        }
+        BusLineSpinnerAdapter myAdapter = new BusLineSpinnerAdapter(this, 0,listVOs);
+        spinner.setAdapter(myAdapter);
+    }
+    private int[] getAllBusLines(){
+        int[] lines = new int[100];
+        for(int i = 0; i < lines.length; i++){
+            lines[i] = i+200;
+        }
+        return lines;
+    }
+    private void initFavoritsSlider(){
+        final int[][] favorites = this.getAllFavorites();
+        Spinner spinner = findViewById(R.id.FavoritsSpinner);
+        ArrayList<FavoritsData> listVOs = new ArrayList<>();
+        for (int i = 0; i < favorites.length; i++) {
+            FavoritsData data = new FavoritsData(favorites[i]);
+            listVOs.add(data);
+        }
+        FavoritsSpinnerAdapter myAdapter = new FavoritsSpinnerAdapter(this, 0,listVOs);
+        spinner.setAdapter(myAdapter);
+    }
+    private int[][] getAllFavorites(){
+
+        int[][] favorites = new int[3][3];
+        favorites[0] = new int[]{201,202,203};
+        favorites[1] = new int[]{204,205,206};
+        favorites[2] = new int[]{207,208,209};
+        return favorites;
+    }
+
+
+
 }
