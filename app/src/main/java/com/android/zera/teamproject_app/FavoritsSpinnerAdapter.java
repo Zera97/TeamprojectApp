@@ -26,6 +26,10 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         this.myAdapter = this;
     }
 
+    public ArrayList<FavoritsData> getListState(){
+        return this.listState;
+    }
+
     @Override
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {
@@ -61,11 +65,15 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         holder.mCheckBox.setChecked(listState.get(position).isSelected());
         isFromView = false;
 
+
         if ((position == 0)) {
             holder.mCheckBox.setVisibility(View.INVISIBLE);
         } else {
             holder.mCheckBox.setVisibility(View.VISIBLE);
         }
+
+
+
         holder.mCheckBox.setTag(position);
 
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

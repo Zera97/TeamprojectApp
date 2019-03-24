@@ -5,8 +5,12 @@ public class BusLineSpinnerData {
     private int number;
     private boolean selected;
 
-    public int getTitle() {
-        return number;
+    public int getNumber(){
+        return this.number;
+    }
+
+    public String getTitle() {
+        return number + "";
     }
 
     public void setTitle(int number) {

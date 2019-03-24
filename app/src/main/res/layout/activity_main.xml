@@ -29,23 +29,47 @@
         <LinearLayout
             android:layout_below="@id/test"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent">
+            android:layout_height="20pt"
+            android:orientation="horizontal"
+            android:background="@color/colorPrimary"
+            android:weightSum="1"
+            >
 
             <Button
                 android:id="@+id/btn_verbindung"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:visibility="visible"
                 android:text="TestVerbindung"
                 android:onClick="TestVerbindung"/>
             <Spinner
                 android:id="@+id/BusLineSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                android:layout_toRightOf="@id/btn_verbindung"
+                />
+            <ImageButton
+                android:id="@+id/addToFavorits"
+                android:src="@drawable/star_add"
+                android:onClick="addFavorite"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:padding="5dp"
+                android:background="@null"
+                android:layout_toRightOf="@id/BusLineSpinner"
+                />
             <Spinner
                 android:id="@+id/FavoritsSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                android:layout_weight="0.15"
+                android:layout_toRightOf="@id/addToFavorits"
+                />
         </LinearLayout>
 
     </RelativeLayout>

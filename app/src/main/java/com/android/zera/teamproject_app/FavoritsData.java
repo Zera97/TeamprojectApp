@@ -1,8 +1,10 @@
 package com.android.zera.teamproject_app;
 
+import java.util.ArrayList;
+
 public class FavoritsData {
 
-    private int[] numbers;
+    private ArrayList<Integer> numbers;
     private boolean selected;
     private String title;
 
@@ -18,19 +20,24 @@ public class FavoritsData {
         this.selected = selected;
     }
 
-    public void  setNumbers(int[] numbers){
+    public void  setNumbers(ArrayList<Integer> numbers){
         this.numbers = numbers;
-        String s = "";
-        for (int i = 0; i< this.numbers.length;i++){
-            s += this.numbers[i];
-            if(i != this.numbers.length - 1){
-                s += ", ";
-            }
+        if(numbers == null){
+            this.title= "Meine Favoriten";
         }
-        this.title = s;
+        else{
+            String s = "";
+            for (int i = 0; i< this.numbers.size();i++){
+                s += this.numbers.get(i);
+                if(i != this.numbers.size() - 1){
+                    s += ", ";
+                }
+            }
+            this.title = s;
+        }
     }
 
-    public FavoritsData(int[] numbers){
+    public FavoritsData(ArrayList<Integer> numbers){
         this.setNumbers(numbers);
         //this.selected = selected;
     }

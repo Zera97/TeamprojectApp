@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,14 +34,14 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private final String TAG = this.getClass().getSimpleName();
     private MapView map = null;
     private IMapController mapController = null;
     private MyLocationNewOverlay mLocationOverlay = null;
-    private Context ctx = getApplicationContext();
+    private Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         // https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
 
         super.onCreate(savedInstanceState);
-       setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         //region Sidebar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -68,12 +69,15 @@ public class MainActivity extends AppCompatActivity
 
         //endregion
 
+        Log.e("Hallo","Ich initialisiere gleich");
         this.initBusLineSlider();
         this.initFavoritsSlider();
+        Log.e("Hallo","Ich habe initialisiert");
 
-        ActivityCompat.requestPermissions(MainActivity.this, new String[] {
-                Manifest.permission.ACCESS_FINE_LOCATION},1);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
+        ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
 
@@ -82,21 +86,21 @@ public class MainActivity extends AppCompatActivity
         map.setTileSource(TileSourceFactory.MAPNIK);
 
 
-        mapController =  map.getController();
+        mapController = map.getController();
         mapController.setZoom(18.0);
         GeoPoint startPoint = new GeoPoint(51.826918, 10.760942);
         mapController.setCenter(startPoint);
 
-        this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx),map);
+        this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
         this.mLocationOverlay.enableMyLocation();
         this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
     }
 
-    public void setFragment(Fragment fragment){
+    public void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_fragment,fragment);
+        fragmentTransaction.replace(R.id.main_fragment, fragment);
         fragmentTransaction.commit();
 
     }
@@ -111,11 +115,11 @@ public class MainActivity extends AppCompatActivity
             if (ni.getTypeName().equalsIgnoreCase("WIFI"))
                 if (ni.isConnected())
                     System.out.println("Wifi");
-                    haveConnectedWifi = true;
+            haveConnectedWifi = true;
             if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
                 if (ni.isConnected())
                     System.out.println("mobile");
-                    haveConnectedMobile = true;
+            haveConnectedMobile = true;
         }
         return haveConnectedWifi || haveConnectedMobile;
     }
@@ -127,10 +131,10 @@ public class MainActivity extends AppCompatActivity
         new MiddleWareConnector(this).execute();
     }
 
-    private String createJSON(MSGData dataObj){
+    private String createJSON(MSGData dataObj) {
         StringBuilder sb = new StringBuilder();
         Gson gson = new Gson();
-        MSGHeader headerOjb = new MSGHeader(1,1,1,dataObj);
+        MSGHeader headerOjb = new MSGHeader(1, 1, 1, dataObj);
         String header = gson.toJson(headerOjb);
         String data = gson.toJson(dataObj);
         /*
@@ -151,12 +155,12 @@ public class MainActivity extends AppCompatActivity
         return sb.toString();
     }
 
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         map.onResume();
     }
 
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         map.onPause();
     }
@@ -206,9 +210,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.punkt3) {
 
-        } else if(id == R.id.nav_contact){
+        } else if (id == R.id.nav_contact) {
 
-        }else if(id == R.id.nav_impressum){
+        } else if (id == R.id.nav_impressum) {
 
         }
 
@@ -216,46 +220,81 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    //endregion
 
-    private void initBusLineSlider(){
+    //endregion
+    //region Sliders
+    private void initBusLineSlider() {
         final int[] select_qualification = this.getAllBusLines();
         Spinner spinner = findViewById(R.id.BusLineSpinner);
         ArrayList<BusLineSpinnerData> listVOs = new ArrayList<>();
         for (int i = 0; i < select_qualification.length; i++) {
-            BusLineSpinnerData data = new BusLineSpinnerData(select_qualification[i],false);
+            BusLineSpinnerData data = new BusLineSpinnerData(select_qualification[i], false);
             listVOs.add(data);
         }
-        BusLineSpinnerAdapter myAdapter = new BusLineSpinnerAdapter(this, 0,listVOs);
+        BusLineSpinnerAdapter myAdapter = new BusLineSpinnerAdapter(this, 0, listVOs);
         spinner.setAdapter(myAdapter);
     }
-    private int[] getAllBusLines(){
+
+    private int[] getAllBusLines() {
         int[] lines = new int[100];
-        for(int i = 0; i < lines.length; i++){
-            lines[i] = i+200;
+        for (int i = 0; i < lines.length; i++) {
+            lines[i] = i + 200;
         }
         return lines;
     }
-    private void initFavoritsSlider(){
-        final int[][] favorites = this.getAllFavorites();
+
+    private void initFavoritsSlider() {
+        final ArrayList<ArrayList<Integer>> favorites = this.getAllFavorites();
         Spinner spinner = findViewById(R.id.FavoritsSpinner);
         ArrayList<FavoritsData> listVOs = new ArrayList<>();
-        for (int i = 0; i < favorites.length; i++) {
-            FavoritsData data = new FavoritsData(favorites[i]);
+        for (int i = 0; i < favorites.size(); i++) {
+            FavoritsData data = new FavoritsData(favorites.get(i));
             listVOs.add(data);
         }
-        FavoritsSpinnerAdapter myAdapter = new FavoritsSpinnerAdapter(this, 0,listVOs);
+        FavoritsSpinnerAdapter myAdapter = new FavoritsSpinnerAdapter(this, 0, listVOs);
         spinner.setAdapter(myAdapter);
     }
-    private int[][] getAllFavorites(){
 
-        int[][] favorites = new int[3][3];
-        favorites[0] = new int[]{201,202,203};
-        favorites[1] = new int[]{204,205,206};
-        favorites[2] = new int[]{207,208,209};
+    private ArrayList<ArrayList<Integer>> getAllFavorites() {
+        ArrayList<ArrayList<Integer>> favorites = new ArrayList<ArrayList<Integer>>();
+        favorites.add(null);
+        favorites.add(new ArrayList<Integer>());
+        favorites.get(1).add(new Integer(201));
+        favorites.get(1).add(new Integer(202));
+        favorites.get(1).add(new Integer(203));
+        favorites.add(new ArrayList<Integer>());
+        favorites.get(2).add(new Integer(204));
+        favorites.get(2).add(new Integer(205));
+        favorites.get(2).add(new Integer(206));
+        favorites.get(2).add(new Integer(207));
+        favorites.add(new ArrayList<Integer>());
+        favorites.get(3).add(new Integer(208));
+        favorites.get(3).add(new Integer(209));
         return favorites;
     }
 
+    public void addFavorite(View v) {
+        FavoritsData newFavorit;
+        ArrayList<Integer> busses = new ArrayList<Integer>();
+
+        Spinner busLineSpinner = findViewById(R.id.BusLineSpinner);
+        BusLineSpinnerAdapter busLineAdapter = (BusLineSpinnerAdapter)busLineSpinner.getAdapter();
+        ArrayList<BusLineSpinnerData> busList = busLineAdapter.getListState();
+
+        for(int i = 0; i < busList.size(); i++){
+            if(busList.get(i).isSelected()){
+                busses.add(busList.get(i).getNumber());
+            }
+        }
+        if(busses.size() > 1){
+            newFavorit = new FavoritsData(busses);
+            Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
+            FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
+            myAdapter.getListState().add(newFavorit);
+        }
+
+    }
+    //endregion
 
 
 }

@@ -25,6 +25,9 @@ public class BusLineSpinnerAdapter extends ArrayAdapter<BusLineSpinnerData> {
         this.myAdapter = this;
     }
 
+    public ArrayList<BusLineSpinnerData> getListState(){
+        return this.listState;
+    }
     @Override
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {
@@ -38,7 +41,6 @@ public class BusLineSpinnerAdapter extends ArrayAdapter<BusLineSpinnerData> {
 
     public View getCustomView(final int position, View convertView,
                               ViewGroup parent) {
-
         final ViewHolder holder;
         if (convertView == null) {
             LayoutInflater layoutInflator = LayoutInflater.from(mContext);
