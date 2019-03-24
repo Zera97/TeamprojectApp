@@ -29,7 +29,7 @@
         <LinearLayout
             android:layout_below="@id/test"
             android:layout_width="match_parent"
-            android:layout_height="20pt"
+            android:layout_height="35pt"
             android:orientation="horizontal"
             android:background="@color/colorPrimary"
             android:weightSum="1"
@@ -47,7 +47,6 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:visibility="visible"
-                android:layout_toRightOf="@id/btn_verbindung"
                 />
             <ImageButton
                 android:id="@+id/addToFavorits"
@@ -60,7 +59,6 @@
                 android:scaleType="centerInside"
                 android:padding="5dp"
                 android:background="@null"
-                android:layout_toRightOf="@id/BusLineSpinner"
                 />
             <Spinner
                 android:id="@+id/FavoritsSpinner"
@@ -68,7 +66,6 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 android:layout_weight="0.15"
-                android:layout_toRightOf="@id/addToFavorits"
                 />
         </LinearLayout>
 

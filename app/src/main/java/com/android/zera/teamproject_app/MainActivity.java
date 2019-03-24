@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -45,17 +44,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        //referenz zum einfügen der Bushaltestellen
-        // https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //region Sidebar
+        //referenz zum einfügen der Bushaltestellen
+        //https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
+
+        /*
+            Sidebar Initialisierung
+        */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,16 +66,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //endregion
+        //=========================================================================================
 
-        Log.e("Hallo","Ich initialisiere gleich");
-        this.initBusLineSlider();
-        this.initFavoritsSlider();
-        Log.e("Hallo","Ich habe initialisiert");
-
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
+        /*
+            Map Initialisierung
+         */
         ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
@@ -96,14 +90,36 @@ public class MainActivity extends AppCompatActivity
         this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
+        //=========================================================================================
+
+        /*
+            Slider Initialisierung
+         */
+
+        Log.e("Hallo","Ich initialisiere gleich");
+        this.initBusLineSlider();
+        this.initFavoritsSlider();
+        Log.e("Hallo","Ich habe initialisiert");
+
+        //=========================================================================================
+
+        /*
+            Permission erfragen
+         */
+
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+        //=========================================================================================
+
     }
 
-    public void setFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_fragment, fragment);
-        fragmentTransaction.commit();
-
-    }
+    /*
+        Verbindungs-Methoden:
+            -Connection Check
+            -Verbindungsaufbau
+            -JSON String erzeugen
+     */
 
     private boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;
@@ -125,10 +141,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void TestVerbindung(View v) {
-        //boolean b = haveNetworkConnection();
-        //System.out.println(b ? "ja" : "nein");
+        boolean b = haveNetworkConnection();
+        System.out.println(b ? "ja" : "nein");
         System.out.println(createJSON(new MSGData()));
-        new MiddleWareConnector(this).execute();
+        if(b){
+            new MiddleWareConnector(this).execute();
+        } else {
+            Toast.makeText(this, "Bitte für eine Internetverbindung sorgen.",
+                    Toast.LENGTH_SHORT).show();
+            /*
+            b = haveNetworkConnection();
+            while(!b){
+                if(b){
+                    new MiddleWareConnector(this).execute();
+                    break;
+                }
+                b = haveNetworkConnection();
+            } */
+        }
+
     }
 
     private String createJSON(MSGData dataObj) {
@@ -155,6 +186,9 @@ public class MainActivity extends AppCompatActivity
         return sb.toString();
     }
 
+    /*
+        OSM-Android Methoden
+     */
     public void onResume() {
         super.onResume();
         map.onResume();
@@ -165,7 +199,9 @@ public class MainActivity extends AppCompatActivity
         map.onPause();
     }
 
-    //region Sidebar-Methoden
+    /*
+        Sidebar Methoden
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -198,7 +234,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -221,8 +256,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    //endregion
-    //region Sliders
+    /*
+        Slider Methoden
+     */
     private void initBusLineSlider() {
         final int[] select_qualification = this.getAllBusLines();
         Spinner spinner = findViewById(R.id.BusLineSpinner);
@@ -294,7 +330,5 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-    //endregion
-
 
 }
