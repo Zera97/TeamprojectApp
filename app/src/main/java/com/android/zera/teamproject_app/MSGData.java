@@ -12,6 +12,8 @@ public class MSGData {
     private Integer InformationAboutBusStop = null;
     private ArrayList<Integer> Linien = null;
 
+    public Object tag = null;
+
 
 
     public int getCommandCode() {

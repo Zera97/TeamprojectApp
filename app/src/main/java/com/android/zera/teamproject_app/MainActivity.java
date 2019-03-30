@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,7 +32,10 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,15 +49,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         //referenz zum einfügen der Bushaltestellen
         //https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
 
-        /*
-            Sidebar Initialisierung
-        */
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //region Sidebar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,11 +70,48 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //=========================================================================================
+        //endregion
 
-        /*
-            Map Initialisierung
-         */
+        Log.e("Hallo","Ich initialisiere gleich");
+        this.initBusLineSlider();
+        this.initFavoritsSlider();
+        Log.e("Hallo","Ich habe initialisiert");
+
+        MSGData msg = new MSGData();
+        msg.setCommandCode(123);
+        msg.setLinien(new ArrayList<Integer>());
+        msg.getLinien().add(new Integer(2));
+        msg.getLinien().add(new Integer(5));
+        msg.getLinien().add(new Integer(-98));
+        msg.getLinien().add(new Integer(20));
+        StringBuilder sb = new StringBuilder();
+        sb.append(12);
+        sb.append("abc!,;?");
+        msg.tag = sb;
+
+        String json = this.createJSON(msg);
+        Log.e("Hallo","JSON IST: " + json);
+
+
+        /*try {
+            String testString = "Medieninformatik";
+            FileOutputStream outStream = getApplicationContext().openFileOutput("testDatei", this.MODE_PRIVATE);
+            outStream.write(testString.getBytes());
+            outStream.close();
+            Log.e("lol","doppellol");
+            FileInputStream inStream = openFileInput("testDatei");
+            Scanner scanner = new Scanner(inStream);
+            scanner.useDelimiter("\\z");
+            String content = scanner.next();
+            scanner.close();
+            Toast.makeText(this,content,Toast.LENGTH_SHORT).show();
+            Log.e("lol",content);
+        }
+        catch(Exception e){}*/
+
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
         ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
@@ -90,27 +131,12 @@ public class MainActivity extends AppCompatActivity
         this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
-        //=========================================================================================
+    }
 
-        /*
-            Slider Initialisierung
-         */
-
-        Log.e("Hallo","Ich initialisiere gleich");
-        this.initBusLineSlider();
-        this.initFavoritsSlider();
-        Log.e("Hallo","Ich habe initialisiert");
-
-        //=========================================================================================
-
-        /*
-            Permission erfragen
-         */
-
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-        //=========================================================================================
+    public void setFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_fragment, fragment);
+        fragmentTransaction.commit();
 
     }
 
@@ -163,17 +189,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private String createJSON(MSGData dataObj) {
-        StringBuilder sb = new StringBuilder();
+        //StringBuilder sb = new StringBuilder();
         Gson gson = new Gson();
-        MSGHeader headerOjb = new MSGHeader(1, 1, 1, dataObj);
-        String header = gson.toJson(headerOjb);
+        //MSGHeader headerOjb = new MSGHeader(1, 1, 1, dataObj);
+        //String header = gson.toJson(headerOjb);
         String data = gson.toJson(dataObj);
         /*
         sb.append(header.substring(0, header.length() - 1));
         sb.append(",\"Data\":");
         sb.append(data);
         sb.append("}"); */
-        sb.append(header);
+        //sb.append(header);
         //Konvertiert JSON String in Object
         //MSGData test = gson.fromJson(json,MSGData.class);
 
@@ -183,25 +209,25 @@ public class MainActivity extends AppCompatActivity
 
         //System.out.println("Hallo:" + json);
 
-        return sb.toString();
+        //return sb.toString();
+        return data;
     }
 
-    /*
-        OSM-Android Methoden
-     */
+    @Override
     public void onResume() {
+        System.out.print("HALLO HIER IN ON RESUME");
         super.onResume();
         map.onResume();
     }
 
+    @Override
     public void onPause() {
+        System.out.print("HALLO HIER IN ON PAUSE");
         super.onPause();
         map.onPause();
     }
 
-    /*
-        Sidebar Methoden
-     */
+    //region Sidebar-Methoden
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -234,6 +260,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -256,9 +283,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /*
-        Slider Methoden
-     */
+    //endregion
+    //region Sliders
     private void initBusLineSlider() {
         final int[] select_qualification = this.getAllBusLines();
         Spinner spinner = findViewById(R.id.BusLineSpinner);
@@ -294,6 +320,40 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<ArrayList<Integer>> getAllFavorites() {
         ArrayList<ArrayList<Integer>> favorites = new ArrayList<ArrayList<Integer>>();
         favorites.add(null);
+        if(true) return favorites;
+        String content = "";
+        try {
+            FileInputStream inStream = openFileInput("wimb_favorits");
+            Scanner scanner = new Scanner(inStream);
+            scanner.useDelimiter("\\z");
+            content = scanner.next();
+            scanner.close();
+            Toast.makeText(this,content,Toast.LENGTH_SHORT).show();
+            Log.e("lol",content);
+        }
+        catch(Exception e){}
+        System.out.println("CONTENT: " + content);
+        if(content.equals("")){
+            return favorites;
+        }
+        String[] favorits = content.split("\n");
+        String favorit = "";
+        for(int i = 0; i < favorits.length; i++){
+            favorit = favorits[i];
+            System.out.println("TAG: " + favorit);
+            String[] busses_str = favorit.split(";");
+            ArrayList<Integer> busses = new ArrayList<Integer>();
+            for (int j = 0; j < busses_str.length; j++){
+                Integer newBus = Integer.parseInt(busses_str[j]);
+                if(newBus != null){
+                    busses.add(newBus);
+                }
+            }
+            favorites.add(busses);
+        }
+        /*
+        ArrayList<ArrayList<Integer>> favorites = new ArrayList<ArrayList<Integer>>();
+        favorites.add(null);
         favorites.add(new ArrayList<Integer>());
         favorites.get(1).add(new Integer(201));
         favorites.get(1).add(new Integer(202));
@@ -305,12 +365,12 @@ public class MainActivity extends AppCompatActivity
         favorites.get(2).add(new Integer(207));
         favorites.add(new ArrayList<Integer>());
         favorites.get(3).add(new Integer(208));
-        favorites.get(3).add(new Integer(209));
+        favorites.get(3).add(new Integer(209));*/
         return favorites;
     }
 
     public void addFavorite(View v) {
-        FavoritsData newFavorit;
+        FavoritsData newFavorit = null;
         ArrayList<Integer> busses = new ArrayList<Integer>();
 
         Spinner busLineSpinner = findViewById(R.id.BusLineSpinner);
@@ -330,5 +390,72 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+    //endregion
+    @Override
+    public void onDestroy(){
+        System.out.print("HALLO HIER ON DESTROY UND SO");
+        Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
+        FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
+        ArrayList<FavoritsData> favorites = myAdapter.getListState();
+        StringBuilder allFavorits = new StringBuilder();
+        ArrayList<Integer> fav = null;
+        for(int i = 1; i < favorites.size(); i++){
+            fav = favorites.get(i).getNumbers();
+            StringBuilder singleFavorit = new StringBuilder();
+            for (int j = 0; j < fav.size(); j++){
+                singleFavorit.append(fav.get(j).intValue());
+                if(i < favorites.size()-1){
+                    singleFavorit.append(";");
+                }
+            }
+            System.out.print("SINGLE FAVORIT: " + singleFavorit.toString());
+            allFavorits.append(singleFavorit.toString());
+            if(i < favorites.size()-1){
+                allFavorits.append("\n");
+            }
+        }
+        String content = allFavorits.toString();
+        System.out.println("CONTENT ON DESRTOY: " + content);
+        try {
+            FileOutputStream outStream = getApplicationContext().openFileOutput("wimb_favorits", this.MODE_PRIVATE);
+            outStream.write(content.getBytes());
+            outStream.close();
+        }
+        catch(Exception e){}
+        super.onDestroy();
+    }
+/*
+    String newEntrie = "";
+            for(int i = 0; i < busses.size(); i++){
+        newEntrie += busses.get(i).intValue();
+        if(i < busses.size()-1){
+            newEntrie += ",";
+        }
+    }
+    content +=
+    Gson gson = new Gson();
+    String favoritJSON = gson.toJson(newFavorit);
 
+            try {
+        FileOutputStream outStream = getApplicationContext().openFileOutput("wimb_favorits", this.MODE_PRIVATE);
+        outStream.
+                outStream.write(favoritJSON.getBytes());
+        outStream.close();
+
+        Log.e("lol","doppellol");
+        FileInputStream inStream = openFileInput("testDatei");
+        Scanner scanner = new Scanner(inStream);
+        scanner.useDelimiter("\\z");
+        String content = scanner.next();
+        scanner.close();
+        Toast.makeText(this,content,Toast.LENGTH_SHORT).show();
+        Log.e("lol",content);
+    }
+            catch(Exception e){}
+            */
+@Override
+    public void onStop(){
+    System.out.print("Hallo hier in ON STOOOOOPPPPP");
+    super.onStop();
+}
 }

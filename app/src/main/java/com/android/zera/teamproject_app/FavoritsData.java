@@ -37,6 +37,10 @@ public class FavoritsData {
         }
     }
 
+    public ArrayList<Integer> getNumbers(){
+        return this.numbers;
+    }
+
     public FavoritsData(ArrayList<Integer> numbers){
         this.setNumbers(numbers);
         //this.selected = selected;
