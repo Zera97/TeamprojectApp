@@ -23,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -169,9 +171,13 @@ public class MainActivity extends AppCompatActivity
     public void TestVerbindung(View v) {
         boolean b = haveNetworkConnection();
         System.out.println(b ? "ja" : "nein");
-        System.out.println(createJSON(new MSGData()));
+        String testJSON = createJSON(new MSGData());
+        System.out.println(testJSON);
         if(b){
-            new MiddleWareConnector(this).execute();
+            //new MiddleWareConnector(this).execute();
+            ReadContext ctx = JsonPath.parse(testJSON);
+            System.out.println(ctx.read("$.commandCode"));
+
         } else {
             Toast.makeText(this, "Bitte für eine Internetverbindung sorgen.",
                     Toast.LENGTH_SHORT).show();

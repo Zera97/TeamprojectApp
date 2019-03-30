@@ -33,4 +33,5 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-geopackage:6.0.3'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.android.support:design:28.0.0'
+    implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
 }
