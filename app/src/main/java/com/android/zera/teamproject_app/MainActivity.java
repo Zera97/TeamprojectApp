@@ -172,12 +172,12 @@ public class MainActivity extends AppCompatActivity
     public void TestVerbindung(View v) {
         boolean b = haveNetworkConnection();
         System.out.println(b ? "ja" : "nein");
-        String testJSON = createJSON(new MSGData());
+        String testJSON = createJSON(new TestData("Werner",5));
         System.out.println(testJSON);
         if(b){
-            //new MiddleWareConnector(this).execute();
-            ReadContext ctx = JsonPath.parse(testJSON);
-            System.out.println(ctx.read("$.commandCode"));
+            new MiddleWareConnector(this).execute(testJSON);
+            //ReadContext ctx = JsonPath.parse(testJSON);
+            //System.out.println(ctx.read("$.commandCode"));
 
         } else {
             Toast.makeText(this, "Bitte für eine Internetverbindung sorgen.",
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private String createJSON(MSGData dataObj) {
+    private String createJSON(Object dataObj) {
         //StringBuilder sb = new StringBuilder();
         Gson gson = new Gson();
         //MSGHeader headerOjb = new MSGHeader(1, 1, 1, dataObj);

@@ -28,16 +28,13 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-       // System.out.println(strings[0]);
 
-        String response = sendMessage();
+        String response = sendMessage(strings[0]);
         return response;
     }
 
-    private String sendMessage(){
-        String ip = "192.168.0.12";
-        String ip2 = "46.167.0.87";
-        String ip3  ="";
+    private String sendMessage(String msg){
+        String ip  ="";
         InetAddress inet = null;
         try {
             inet = Inet4Address.getByName("www.eos-noctis.de");
@@ -45,13 +42,11 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
             return null;
         }
-        ip3 = inet.getHostAddress();
-        System.out.println("ip3: " + ip);
-        int port = 8080;
-        int port2 = 31896;
-        Socket s;
+        ip = inet.getHostAddress();
+        int port = 31896;
+        Socket socket;
         try {
-            s = new Socket(ip3,port2);
+            socket = new Socket(ip,port);
         } catch (UnknownHostException e) {
             e.printStackTrace();
             return null;
@@ -60,63 +55,66 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             return null;
         }
         System.out.println("Socket erzeugt.");
-        DataOutputStream out;
+        DataOutputStream outputStream;
         try {
-            out = new DataOutputStream(s.getOutputStream());
+            outputStream = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        //BufferedReader in;
-        DataInputStream in;
+        DataInputStream inputStream;
         try {
-            //in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            in = new DataInputStream(s.getInputStream());
+            inputStream = new DataInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
         System.out.println("Streams erzeugt.");
-        int input = 8;
         try {
-            out.writeInt(input);
+            outputStream.writeUTF(msg);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
         try {
-            out.flush();
+            outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        System.out.println("Habe Input gesendet: " + input);
-        int output;
+        System.out.println("Habe Input gesendet: " + msg);
+        String fromServer = "";
         try {
-            output = in.readInt();
+            /*
+            while(in.available()>0)
+            fromServer += in.readUTF();
+            System.out.println(fromServer);
+            */
+            fromServer = inputStream.readLine();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        System.out.println("Habe Output gelesen: " + output);
+        System.out.println("Habe Output gelesen: " + fromServer);
         try {
-            out.close();
-            in.close();
-            s.close();
+            outputStream.close();
+            inputStream.close();
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
         System.out.println("Alles geschlossen.");
-        return output + "";
+        return fromServer;
+        //return output;
     }
 
     @Override
     protected void onPostExecute(String result) {
-
+        /*
         Activity activity = parentActivity.get();
         Button txt = (Button) activity.findViewById(R.id.btn_verbindung);
-        txt.setText(result);
+        txt.setText(result); */
     }
 
     @Override
