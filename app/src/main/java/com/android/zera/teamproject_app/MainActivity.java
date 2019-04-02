@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
     public void TestVerbindung(View v) {
         boolean b = haveNetworkConnection();
         System.out.println(b ? "ja" : "nein");
-        String testJSON = createJSON(new TestData("app", 1, "test"));
+        String testJSON = createJSON(new TestData("APP", 1, "test"));
         System.out.println(testJSON);
         if (b) {
             new MiddleWareConnector(this).execute(testJSON);
