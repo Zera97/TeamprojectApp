@@ -384,6 +384,7 @@ public class MainActivity extends AppCompatActivity
             outStream.write(content.getBytes());
             outStream.close();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         super.onDestroy();
     }
@@ -402,7 +403,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
         for(Busstop myMarker : busstops){
-            if(myMarker.isInfoWindowShown() == true && p != myMarker.getPosition()){
+            if(myMarker.isInfoWindowShown() && p != myMarker.getPosition()){
                 InfoWindow.closeAllInfoWindowsOn(map);
             }
         }
