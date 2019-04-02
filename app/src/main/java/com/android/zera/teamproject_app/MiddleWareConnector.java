@@ -85,11 +85,10 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         System.out.println("Habe Input gesendet: " + msg);
         String fromServer = "";
         try {
-            /*
-            while(in.available()>0)
-            fromServer += in.readUTF();
-            System.out.println(fromServer);
-            */
+
+            //while(inputStream.available()>0)
+              //  fromServer += inputStream.readUTF();
+
             fromServer = inputStream.readLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -105,8 +104,8 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             return null;
         }
         System.out.println("Alles geschlossen.");
+
         return fromServer;
-        //return output;
     }
 
     @Override

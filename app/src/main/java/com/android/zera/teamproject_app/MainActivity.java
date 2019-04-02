@@ -31,6 +31,7 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -80,38 +81,6 @@ public class MainActivity extends AppCompatActivity
         this.initFavoritsSlider();
         Log.e("Hallo","Ich habe initialisiert");
 
-        MSGData msg = new MSGData();
-        msg.setCommandCode(123);
-        msg.setLinien(new ArrayList<Integer>());
-        msg.getLinien().add(new Integer(2));
-        msg.getLinien().add(new Integer(5));
-        msg.getLinien().add(new Integer(-98));
-        msg.getLinien().add(new Integer(20));
-        StringBuilder sb = new StringBuilder();
-        sb.append(12);
-        sb.append("abc!,;?");
-        msg.tag = sb;
-
-        String json = this.createJSON(msg);
-        Log.e("Hallo","JSON IST: " + json);
-
-
-        /*try {
-            String testString = "Medieninformatik";
-            FileOutputStream outStream = getApplicationContext().openFileOutput("testDatei", this.MODE_PRIVATE);
-            outStream.write(testString.getBytes());
-            outStream.close();
-            Log.e("lol","doppellol");
-            FileInputStream inStream = openFileInput("testDatei");
-            Scanner scanner = new Scanner(inStream);
-            scanner.useDelimiter("\\z");
-            String content = scanner.next();
-            scanner.close();
-            Toast.makeText(this,content,Toast.LENGTH_SHORT).show();
-            Log.e("lol",content);
-        }
-        catch(Exception e){}*/
-
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
@@ -133,6 +102,8 @@ public class MainActivity extends AppCompatActivity
         this.mLocationOverlay.enableMyLocation();
         this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
+
+        this.setBusstops();
 
     }
 
@@ -172,7 +143,7 @@ public class MainActivity extends AppCompatActivity
     public void TestVerbindung(View v) {
         boolean b = haveNetworkConnection();
         System.out.println(b ? "ja" : "nein");
-        String testJSON = createJSON(new TestData("Werner",5));
+        String testJSON = createJSON(new TestData("app",1,"test"));
         System.out.println(testJSON);
         if(b){
             new MiddleWareConnector(this).execute(testJSON);
@@ -431,35 +402,15 @@ public class MainActivity extends AppCompatActivity
         catch(Exception e){}
         super.onDestroy();
     }
-/*
-    String newEntrie = "";
-            for(int i = 0; i < busses.size(); i++){
-        newEntrie += busses.get(i).intValue();
-        if(i < busses.size()-1){
-            newEntrie += ",";
-        }
-    }
-    content +=
-    Gson gson = new Gson();
-    String favoritJSON = gson.toJson(newFavorit);
 
-            try {
-        FileOutputStream outStream = getApplicationContext().openFileOutput("wimb_favorits", this.MODE_PRIVATE);
-        outStream.
-                outStream.write(favoritJSON.getBytes());
-        outStream.close();
-
-        Log.e("lol","doppellol");
-        FileInputStream inStream = openFileInput("testDatei");
-        Scanner scanner = new Scanner(inStream);
-        scanner.useDelimiter("\\z");
-        String content = scanner.next();
-        scanner.close();
-        Toast.makeText(this,content,Toast.LENGTH_SHORT).show();
-        Log.e("lol",content);
+    private void setBusstops(){
+        Marker startMarker = new Marker(map);
+        startMarker.setPosition(new GeoPoint(new GeoPoint(52.826918, 12.760942)));
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setTitle("Start point");
+        map.getOverlays().add(startMarker);
     }
-            catch(Exception e){}
-            */
+
 @Override
     public void onStop(){
     System.out.print("Hallo hier in ON STOOOOOPPPPP");

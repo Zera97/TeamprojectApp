@@ -2,20 +2,22 @@ package com.android.zera.teamproject_app;
 
 public class TestData {
 
-    String name;
+    String sender;
     int id;
+    String code;
 
-    public TestData(String name, int id){
-        this.name = name;
+    public TestData(String sender, int id, String code){
+        this.sender = sender;
         this.id = id;
+        this.code = code;
     }
 
-    public String getName() {
-        return name;
+    public String getSender() {
+        return sender;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public int getId() {
@@ -26,5 +28,11 @@ public class TestData {
         this.id = id;
     }
 
+    public String getCode() {
+        return code;
+    }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
 }
