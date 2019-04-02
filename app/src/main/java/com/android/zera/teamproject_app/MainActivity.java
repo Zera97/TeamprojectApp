@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
         this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
-        this.setBusstops();
+        //this.setBusstops();
 
     }
 
