@@ -2,6 +2,7 @@ package com.android.zera.teamproject_app;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.ConnectivityManager;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
 
     private final String TAG = this.getClass().getSimpleName();
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private IMapController mapController = null;
     private MyLocationNewOverlay mLocationOverlay = null;
     private Context ctx;
+    private Resources res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +86,10 @@ public class MainActivity extends AppCompatActivity
 
         //endregion
 
-        Log.e("Hallo","Ich initialisiere gleich");
+        Log.e("Hallo", "Ich initialisiere gleich");
         this.initBusLineSlider();
         this.initFavoritsSlider();
-        Log.e("Hallo","Ich habe initialisiert");
+        Log.e("Hallo", "Ich habe initialisiert");
 
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -151,9 +153,9 @@ public class MainActivity extends AppCompatActivity
     public void TestVerbindung(View v) {
         boolean b = haveNetworkConnection();
         System.out.println(b ? "ja" : "nein");
-        String testJSON = createJSON(new TestData("app",1,"test"));
+        String testJSON = createJSON(new TestData("app", 1, "test"));
         System.out.println(testJSON);
-        if(b){
+        if (b) {
             new MiddleWareConnector(this).execute(testJSON);
             //ReadContext ctx = JsonPath.parse(testJSON);
             //System.out.println(ctx.read("$.commandCode"));
@@ -306,7 +308,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<ArrayList<Integer>> getAllFavorites() {
         ArrayList<ArrayList<Integer>> favorites = new ArrayList<ArrayList<Integer>>();
         favorites.add(null);
-        if(true) return favorites;
+        if (true) return favorites;
         String content = "";
         try {
             FileInputStream inStream = openFileInput("wimb_favorits");
@@ -314,24 +316,24 @@ public class MainActivity extends AppCompatActivity
             scanner.useDelimiter("\\z");
             content = scanner.next();
             scanner.close();
-            Toast.makeText(this,content,Toast.LENGTH_SHORT).show();
-            Log.e("lol",content);
+            Toast.makeText(this, content, Toast.LENGTH_SHORT).show();
+            Log.e("lol", content);
+        } catch (Exception e) {
         }
-        catch(Exception e){}
         System.out.println("CONTENT: " + content);
-        if(content.equals("")){
+        if (content.equals("")) {
             return favorites;
         }
         String[] favorits = content.split("\n");
         String favorit = "";
-        for(int i = 0; i < favorits.length; i++){
+        for (int i = 0; i < favorits.length; i++) {
             favorit = favorits[i];
             System.out.println("TAG: " + favorit);
             String[] busses_str = favorit.split(";");
             ArrayList<Integer> busses = new ArrayList<Integer>();
-            for (int j = 0; j < busses_str.length; j++){
+            for (int j = 0; j < busses_str.length; j++) {
                 Integer newBus = Integer.parseInt(busses_str[j]);
-                if(newBus != null){
+                if (newBus != null) {
                     busses.add(newBus);
                 }
             }
@@ -360,43 +362,44 @@ public class MainActivity extends AppCompatActivity
         ArrayList<Integer> busses = new ArrayList<Integer>();
 
         Spinner busLineSpinner = findViewById(R.id.BusLineSpinner);
-        BusLineSpinnerAdapter busLineAdapter = (BusLineSpinnerAdapter)busLineSpinner.getAdapter();
+        BusLineSpinnerAdapter busLineAdapter = (BusLineSpinnerAdapter) busLineSpinner.getAdapter();
         ArrayList<BusLineSpinnerData> busList = busLineAdapter.getListState();
 
-        for(int i = 0; i < busList.size(); i++){
-            if(busList.get(i).isSelected()){
+        for (int i = 0; i < busList.size(); i++) {
+            if (busList.get(i).isSelected()) {
                 busses.add(busList.get(i).getNumber());
             }
         }
-        if(busses.size() > 1){
+        if (busses.size() > 1) {
             newFavorit = new FavoritsData(busses);
             Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
-            FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
+            FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter) favoritSpinner.getAdapter();
             myAdapter.getListState().add(newFavorit);
         }
 
     }
+
     //endregion
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         System.out.print("HALLO HIER ON DESTROY UND SO");
         Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
-        FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
+        FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter) favoritSpinner.getAdapter();
         ArrayList<FavoritsData> favorites = myAdapter.getListState();
         StringBuilder allFavorits = new StringBuilder();
         ArrayList<Integer> fav = null;
-        for(int i = 1; i < favorites.size(); i++){
+        for (int i = 1; i < favorites.size(); i++) {
             fav = favorites.get(i).getNumbers();
             StringBuilder singleFavorit = new StringBuilder();
-            for (int j = 0; j < fav.size(); j++){
+            for (int j = 0; j < fav.size(); j++) {
                 singleFavorit.append(fav.get(j).intValue());
-                if(i < favorites.size()-1){
+                if (i < favorites.size() - 1) {
                     singleFavorit.append(";");
                 }
             }
             System.out.print("SINGLE FAVORIT: " + singleFavorit.toString());
             allFavorits.append(singleFavorit.toString());
-            if(i < favorites.size()-1){
+            if (i < favorites.size() - 1) {
                 allFavorits.append("\n");
             }
         }
@@ -406,20 +409,13 @@ public class MainActivity extends AppCompatActivity
             FileOutputStream outStream = getApplicationContext().openFileOutput("wimb_favorits", this.MODE_PRIVATE);
             outStream.write(content.getBytes());
             outStream.close();
+        } catch (Exception e) {
         }
-        catch(Exception e){}
         super.onDestroy();
     }
 
-    private void setBusstops(){
+    private void setBusstops() {
         /*
-        Marker startMarker = new Marker(map);
-        startMarker.setPosition(new GeoPoint(new GeoPoint(52.826918, 12.760942)));
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        startMarker.setTitle("Start point");
-        map.getOverlays().add(startMarker);
-        */
-        // create 10k labelled points
         // in most cases, there will be no problems of displaying >100k points, feel free to try
         List<IGeoPoint> points = new ArrayList<>();
         for (int i = 0; i < 10000; i++) {
@@ -458,11 +454,20 @@ public class MainActivity extends AppCompatActivity
 
         // add overlay
         map.getOverlays().add(sfpo);
+        */
+
+        String[] test = {"Hallo Dirk", "51.826918", "10.760942"};
+        Busstop stop = new Busstop(map, test, this, res);
+        map.getOverlayManager().add(stop);
+        String[] test2 = {"Hallo Fabi", "51.926918", "10.960942"};
+        Busstop stop2 = new Busstop(map, test, this, res);
+        map.getOverlayManager().add(stop2);
     }
 
-@Override
-    public void onStop(){
-    System.out.print("Hallo hier in ON STOOOOOPPPPP");
-    super.onStop();
-}
+    @Override
+    public void onStop() {
+        System.out.print("Hallo hier in ON STOOOOOPPPPP");
+        super.onStop();
+    }
+
 }
