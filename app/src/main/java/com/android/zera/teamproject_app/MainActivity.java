@@ -2,6 +2,8 @@ package com.android.zera.teamproject_app;
 
 import android.Manifest;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -34,10 +37,15 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
+import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
@@ -404,11 +412,52 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setBusstops(){
+        /*
         Marker startMarker = new Marker(map);
         startMarker.setPosition(new GeoPoint(new GeoPoint(52.826918, 12.760942)));
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         startMarker.setTitle("Start point");
         map.getOverlays().add(startMarker);
+        */
+        // create 10k labelled points
+        // in most cases, there will be no problems of displaying >100k points, feel free to try
+        List<IGeoPoint> points = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            points.add(new LabelledGeoPoint(51 + Math.random() * 5, 10 + Math.random() * 5
+                    , "Point #" + i));
+        }
+
+        // wrap them in a theme
+        SimplePointTheme pt = new SimplePointTheme(points, true);
+
+        // create label style
+        Paint textStyle = new Paint();
+        textStyle.setStyle(Paint.Style.FILL);
+        textStyle.setColor(Color.parseColor("#0000ff"));
+        textStyle.setTextAlign(Paint.Align.CENTER);
+        textStyle.setTextSize(24);
+
+        // set some visual options for the overlay
+        // we use here MAXIMUM_OPTIMIZATION algorithm, which works well with >100k points
+        SimpleFastPointOverlayOptions opt = SimpleFastPointOverlayOptions.getDefaultStyle()
+                .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
+                .setRadius(7).setIsClickable(true).setCellSize(15).setTextStyle(textStyle);
+
+        // create the overlay with the theme
+        final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
+
+        // onClick callback
+        sfpo.setOnClickListener(new SimpleFastPointOverlay.OnClickListener() {
+            @Override
+            public void onClick(SimpleFastPointOverlay.PointAdapter points, Integer point) {
+                Toast.makeText(map.getContext()
+                        , "You clicked " + ((LabelledGeoPoint) points.get(point)).getLabel()
+                        , Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // add overlay
+        map.getOverlays().add(sfpo);
     }
 
 @Override
