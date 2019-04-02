@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initFavoritsSlider() {
-        final ArrayList<ArrayList<Integer>> favorites = this.getAllFavorites();
+        final ArrayList<ArrayList<Integer>> favorites = this.getAllFavoritesFromFile();
         Spinner spinner = findViewById(R.id.FavoritsSpinner);
         ArrayList<FavoritsData> listVOs = new ArrayList<>();
         for (int i = 0; i < favorites.size(); i++) {
@@ -279,10 +279,10 @@ public class MainActivity extends AppCompatActivity
         spinner.setAdapter(myAdapter);
     }
 
-    private ArrayList<ArrayList<Integer>> getAllFavorites() {
+    private ArrayList<ArrayList<Integer>> getAllFavoritesFromFile() {
         ArrayList<ArrayList<Integer>> favorites = new ArrayList<ArrayList<Integer>>();
         favorites.add(null);
-        if (true) return favorites;
+        //if(true) return favorites;
         String content = "";
         try {
             FileInputStream inStream = openFileInput("wimb_favorits");
@@ -294,24 +294,34 @@ public class MainActivity extends AppCompatActivity
             Log.e("lol", content);
         } catch (Exception e) {
         }
-        System.out.println("CONTENT: " + content);
-        if (content.equals("")) {
+        try {
+            System.out.println("CONTENT: " + content);
+            if (content.equals("")) {
+                return favorites;
+            }
+            String[] favorits = content.split("\n");
+            String favorit = "";
+            for (int i = 0; i < favorits.length; i++) {
+                favorit = favorits[i];
+                System.out.println("TAG: " + favorit);
+                String[] busses_str = favorit.split(";");
+                ArrayList<Integer> busses = new ArrayList<Integer>();
+                for (int j = 0; j < busses_str.length; j++) {
+                    Integer newBus = Integer.parseInt(busses_str[j]);
+                    if (newBus != null) {
+                        busses.add(newBus);
+                    }
+                }
+                favorites.add(busses);
+            }
             return favorites;
         }
-        String[] favorits = content.split("\n");
-        String favorit = "";
-        for (int i = 0; i < favorits.length; i++) {
-            favorit = favorits[i];
-            System.out.println("TAG: " + favorit);
-            String[] busses_str = favorit.split(";");
-            ArrayList<Integer> busses = new ArrayList<Integer>();
-            for (int j = 0; j < busses_str.length; j++) {
-                Integer newBus = Integer.parseInt(busses_str[j]);
-                if (newBus != null) {
-                    busses.add(newBus);
-                }
-            }
-            favorites.add(busses);
+        catch (Exception e){
+            Log.e("Fehler bei Favoriten", e.getMessage());
+            Toast.makeText(this, "Fehler beim Laden der Favoriten", Toast.LENGTH_SHORT).show();
+            ArrayList<ArrayList<Integer>> favorites2 = new ArrayList<ArrayList<Integer>>();
+            favorites2.add(null);
+            return favorites2;
         }
         /*
         ArrayList<ArrayList<Integer>> favorites = new ArrayList<ArrayList<Integer>>();
@@ -328,7 +338,6 @@ public class MainActivity extends AppCompatActivity
         favorites.add(new ArrayList<Integer>());
         favorites.get(3).add(new Integer(208));
         favorites.get(3).add(new Integer(209));*/
-        return favorites;
     }
 
     public void addFavorite(View v) {
@@ -347,12 +356,40 @@ public class MainActivity extends AppCompatActivity
         if (busses.size() > 1) {
             newFavorit = new FavoritsData(busses);
             Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
-            FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter) favoritSpinner.getAdapter();
-            myAdapter.getListState().add(newFavorit);
+            FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
+            ArrayList<FavoritsData> favorites = myAdapter.getListState();
+            favorites.add(newFavorit);
+
+            StringBuilder allFavorits = new StringBuilder();
+            ArrayList<Integer> fav = null;
+            for(int i = 1; i < favorites.size(); i++){
+                fav = favorites.get(i).getNumbers();
+                StringBuilder singleFavorit = new StringBuilder();
+                System.out.print("FAV SIZE: " + fav.size());
+                for (int j = 0; j < fav.size(); j++){
+                    singleFavorit.append(fav.get(j).intValue());
+                    if(j < fav.size()-1){
+                        singleFavorit.append(";");
+                    }
+                }
+                System.out.print("SINGLE FAVORIT: " + singleFavorit.toString() + " ");
+                allFavorits.append(singleFavorit.toString());
+                if(i < favorites.size()-1){
+                    allFavorits.append("\n");
+                }
+            }
+            String content = allFavorits.toString();
+            System.out.println("CONTENT ON DESRTOY: \n\n" + content);
+            try {
+                FileOutputStream outStream = getApplicationContext().openFileOutput("wimb_favorits", this.MODE_PRIVATE);
+                outStream.write(content.getBytes());
+                outStream.close();
+            }
+            catch(Exception e){}
+
         }
 
     }
-
     //endregion
     @Override
     public void onDestroy() {
