@@ -3,8 +3,6 @@ package com.android.zera.teamproject_app;
 import android.Manifest;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -26,31 +24,24 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.ReadContext;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
-import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
-import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
-import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, MapEventsReceiver {
 
 
     private final String TAG = this.getClass().getSimpleName();
@@ -59,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     private MyLocationNewOverlay mLocationOverlay = null;
     private Context ctx;
     private Resources res;
+    private ArrayList<Busstop> busstops;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,27 +169,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private String createJSON(Object dataObj) {
-        //StringBuilder sb = new StringBuilder();
         Gson gson = new Gson();
-        //MSGHeader headerOjb = new MSGHeader(1, 1, 1, dataObj);
-        //String header = gson.toJson(headerOjb);
         String data = gson.toJson(dataObj);
-        /*
-        sb.append(header.substring(0, header.length() - 1));
-        sb.append(",\"Data\":");
-        sb.append(data);
-        sb.append("}"); */
-        //sb.append(header);
-        //Konvertiert JSON String in Object
-        //MSGData test = gson.fromJson(json,MSGData.class);
 
-        //Ohne klasse, aber jetzt kann man natürlich nicht o.messageID machen
-        //object o = gson.fromJson(json);
-
-
-        //System.out.println("Hallo:" + json);
-
-        //return sb.toString();
         return data;
     }
 
@@ -415,53 +389,30 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setBusstops() {
-        /*
-        // in most cases, there will be no problems of displaying >100k points, feel free to try
-        List<IGeoPoint> points = new ArrayList<>();
-        for (int i = 0; i < 10000; i++) {
-            points.add(new LabelledGeoPoint(51 + Math.random() * 5, 10 + Math.random() * 5
-                    , "Point #" + i));
-        }
-
-        // wrap them in a theme
-        SimplePointTheme pt = new SimplePointTheme(points, true);
-
-        // create label style
-        Paint textStyle = new Paint();
-        textStyle.setStyle(Paint.Style.FILL);
-        textStyle.setColor(Color.parseColor("#0000ff"));
-        textStyle.setTextAlign(Paint.Align.CENTER);
-        textStyle.setTextSize(24);
-
-        // set some visual options for the overlay
-        // we use here MAXIMUM_OPTIMIZATION algorithm, which works well with >100k points
-        SimpleFastPointOverlayOptions opt = SimpleFastPointOverlayOptions.getDefaultStyle()
-                .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
-                .setRadius(7).setIsClickable(true).setCellSize(15).setTextStyle(textStyle);
-
-        // create the overlay with the theme
-        final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
-
-        // onClick callback
-        sfpo.setOnClickListener(new SimpleFastPointOverlay.OnClickListener() {
-            @Override
-            public void onClick(SimpleFastPointOverlay.PointAdapter points, Integer point) {
-                Toast.makeText(map.getContext()
-                        , "You clicked " + ((LabelledGeoPoint) points.get(point)).getLabel()
-                        , Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // add overlay
-        map.getOverlays().add(sfpo);
-        */
-
         String[] test = {"Hallo Dirk", "51.826918", "10.760942"};
         Busstop stop = new Busstop(map, test, this, res);
         map.getOverlayManager().add(stop);
         String[] test2 = {"Hallo Fabi", "51.926918", "10.960942"};
-        Busstop stop2 = new Busstop(map, test, this, res);
+        Busstop stop2 = new Busstop(map, test2, this, res);
         map.getOverlayManager().add(stop2);
+        busstops.add(stop);
+        busstops.add(stop2);
+    }
+
+    @Override
+    public boolean singleTapConfirmedHelper(GeoPoint p) {
+        for(Busstop myMarker : busstops){
+            if(myMarker.isInfoWindowShown() == true && p != myMarker.getPosition()){
+                InfoWindow.closeAllInfoWindowsOn(map);
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean longPressHelper(GeoPoint p) {
+        return false;
     }
 
     @Override

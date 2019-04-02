@@ -34,7 +34,7 @@ public class Busstop extends Marker{
             GeoPoint position = new GeoPoint(lat,longi);
             this.setPosition(position);
             this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            this.setIcon(dra = res.getDrawable(R.drawable.bus_stop_icon, null));
+           // this.setIcon(dra = res.getDrawable(R.drawable.bus_stop_icon, null));
             MyInfoWindow infoWindow = new MyInfoWindow(R.layout.information_bubble, map, mainActivity,sonstigeParameter);
             this.setInfoWindow(infoWindow);
         }
