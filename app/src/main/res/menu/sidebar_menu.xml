@@ -5,11 +5,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/punkt1"
-            android:title="Punkt1" />
+            android:id="@+id/map"
+            android:title="Karte" />
         <item
-            android:id="@+id/punkt2"
-            android:title="Punkt2" />
+            android:id="@+id/fahrplan"
+            android:title="Fahrpläne" />
         <item
             android:id="@+id/punkt3"
             android:title="Punkt3" />

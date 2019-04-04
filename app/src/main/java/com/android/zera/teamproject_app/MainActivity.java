@@ -2,6 +2,7 @@ package com.android.zera.teamproject_app;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,8 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -43,8 +42,6 @@ import java.util.Scanner;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapEventsReceiver {
 
-
-    private final String TAG = this.getClass().getSimpleName();
     private MapView map = null;
     private IMapController mapController = null;
     private MyLocationNewOverlay mLocationOverlay = null;
@@ -54,7 +51,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         //referenz zum einfügen der Bushaltestellen
         //https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
         //https://github.com/json-path/JsonPath
@@ -62,34 +58,22 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //region Sidebar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        //endregion
+        this.checkPermissions();
+        this.initSidebar();
+        this.initMap();
 
         Log.e("Hallo", "Ich initialisiere gleich");
         this.initBusLineSlider();
         this.initFavoritsSlider();
         Log.e("Hallo", "Ich habe initialisiert");
 
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
         ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
+        //this.setBusstops();
+    }
 
+    private void initMap(){
         map = (MapView) findViewById(R.id.map);
         map.setMultiTouchControls(true);
         map.setTileSource(TileSourceFactory.MAPNIK);
@@ -104,46 +88,29 @@ public class MainActivity extends AppCompatActivity
         this.mLocationOverlay.enableMyLocation();
         this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
-
-        //this.setBusstops();
-
     }
 
-    public void setFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_fragment, fragment);
-        fragmentTransaction.commit();
 
+    private void checkPermissions(){
+        //TO DO:
+        //https://inthecheesefactory.com/blog/things-you-need-to-know-about-android-m-permission-developer-edition/en
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
     }
 
-    /*
-        Verbindungs-Methoden:
-            -Connection Check
-            -Verbindungsaufbau
-            -JSON String erzeugen
-     */
+    //region Network-Stuff
 
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    System.out.println("Wifi");
-            haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    System.out.println("mobile");
-            haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void TestVerbindung(View v) {
-        boolean b = haveNetworkConnection();
+        boolean b = isNetworkAvailable();
         System.out.println(b ? "ja" : "nein");
         String testJSON = createJSON(new TestData("APP", 1, "test"));
         System.out.println(testJSON);
@@ -168,6 +135,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    //endregion
+
     private String createJSON(Object dataObj) {
         Gson gson = new Gson();
         String data = gson.toJson(dataObj);
@@ -175,28 +144,32 @@ public class MainActivity extends AppCompatActivity
         return data;
     }
 
-    @Override
-    public void onResume() {
-        System.out.print("HALLO HIER IN ON RESUME");
-        super.onResume();
-        map.onResume();
+    //region Sidebar
+
+    private void initSidebar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
-    @Override
-    public void onPause() {
-        System.out.print("HALLO HIER IN ON PAUSE");
-        super.onPause();
-        map.onPause();
-    }
-
-    //region Sidebar-Methoden
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent mainact = new Intent(this, MainActivity.class);
+            startActivity(mainact);
+            finish();
         }
     }
 
@@ -222,15 +195,20 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
-        if (id == R.id.punkt1) {
+        if (id == R.id.map) {
+            Intent activity_main = new Intent(this, MainActivity.class);
+            startActivity(activity_main);
+            finish();
 
-        } else if (id == R.id.punkt2) {
+        } else if (id == R.id.fahrplan) {
+            Intent activity_fahrpläne = new Intent(this, FahrplanActivity.class);
+            startActivity(activity_fahrpläne);
+            finish();
 
         } else if (id == R.id.punkt3) {
 
@@ -246,6 +224,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     //endregion
+
     //region Sliders
     private void initBusLineSlider() {
         final int[] select_qualification = this.getAllBusLines();
@@ -391,6 +370,22 @@ public class MainActivity extends AppCompatActivity
 
     }
     //endregion
+
+    //region Android Status (überschriebene On-Methoden)
+    @Override
+    public void onResume() {
+        System.out.print("HALLO HIER IN ON RESUME");
+        super.onResume();
+        map.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        System.out.print("HALLO HIER IN ON PAUSE");
+        super.onPause();
+        map.onPause();
+    }
+
     @Override
     public void onDestroy() {
         System.out.print("HALLO HIER ON DESTROY UND SO");
@@ -426,17 +421,6 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    private void setBusstops() {
-        String[] test = {"Hallo Dirk", "51.826918", "10.760942"};
-        Busstop stop = new Busstop(map, test, this, res);
-        map.getOverlayManager().add(stop);
-        String[] test2 = {"Hallo Fabi", "51.926918", "10.960942"};
-        Busstop stop2 = new Busstop(map, test2, this, res);
-        map.getOverlayManager().add(stop2);
-        busstops.add(stop);
-        busstops.add(stop2);
-    }
-
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
         for(Busstop myMarker : busstops){
@@ -457,6 +441,19 @@ public class MainActivity extends AppCompatActivity
     public void onStop() {
         System.out.print("Hallo hier in ON STOOOOOPPPPP");
         super.onStop();
+    }
+
+    //endregion
+
+    private void setBusstops() {
+        String[] test = {"Hallo Dirk", "51.826918", "10.760942"};
+        Busstop stop = new Busstop(map, test, this, res);
+        map.getOverlayManager().add(stop);
+        String[] test2 = {"Hallo Fabi", "51.926918", "10.960942"};
+        Busstop stop2 = new Busstop(map, test2, this, res);
+        map.getOverlayManager().add(stop2);
+        busstops.add(stop);
+        busstops.add(stop2);
     }
 
 }
