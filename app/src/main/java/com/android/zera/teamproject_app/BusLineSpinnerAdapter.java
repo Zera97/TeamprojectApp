@@ -44,7 +44,7 @@ public class BusLineSpinnerAdapter extends ArrayAdapter<BusLineSpinnerData> {
         final ViewHolder holder;
         if (convertView == null) {
             LayoutInflater layoutInflator = LayoutInflater.from(mContext);
-            convertView = layoutInflator.inflate(R.layout.fav_spinner, null);
+            convertView = layoutInflator.inflate(R.layout.fav_spinner_check, null);
             holder = new ViewHolder();
             holder.mTextView = convertView
                     .findViewById(R.id.text);

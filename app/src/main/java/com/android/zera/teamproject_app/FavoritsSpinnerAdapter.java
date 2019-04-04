@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -51,32 +51,37 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
             holder = new FavoritsSpinnerAdapter.ViewHolder();
             holder.mTextView = convertView
                     .findViewById(R.id.text);
-            holder.mCheckBox = convertView
-                    .findViewById(R.id.checkbox);
+            holder.mButton = convertView
+                    .findViewById(R.id.button);
             convertView.setTag(holder);
         } else {
             holder = (FavoritsSpinnerAdapter.ViewHolder) convertView.getTag();
         }
 
-        holder.mTextView.setText(listState.get(position).getTitle());
+        //holder.mTextView.setText(listState.get(position).getTitle());
+        holder.mButton.setText(listState.get(position).getTitle());
 
         // To check weather checked event fire from getview() or user input
-        isFromView = true;
-        holder.mCheckBox.setChecked(listState.get(position).isSelected());
-        isFromView = false;
+        //isFromView = true;
+        //holder.mButton.setChecked(listState.get(position).isSelected());
+        //isFromView = false;
 
 
         if ((position == 0)) {
-            holder.mCheckBox.setVisibility(View.INVISIBLE);
+            holder.mTextView.setText("Meine Favoriten");
+            holder.mTextView.setVisibility(View.VISIBLE);
+            holder.mButton.setVisibility(View.GONE);
         } else {
-            holder.mCheckBox.setVisibility(View.VISIBLE);
+            holder.mTextView.setText("");
+            holder.mTextView.setVisibility(View.GONE);
+            holder.mButton.setVisibility(View.VISIBLE);
+            holder.mButton.setText(listState.get(position).getTitle());
         }
 
 
+        holder.mButton.setTag(position);
 
-        holder.mCheckBox.setTag(position);
-
-        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /*holder.mButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -84,14 +89,33 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
                 int getPosition = (Integer) buttonView.getTag();
                 //this.updateSelection();
                 if (!isFromView) {
+                    //mContex
                     listState.get(position).setSelected(isChecked);
                     Log.e("TEST","Hallo" + getPosition + " " + listState.get(getPosition).getTitle());
                 }
             }
+        });*/
+        holder.mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = (Integer) v.getTag();
+                if(position == 0)return;
+                Log.e("TEST","Hallo " + position + " " + listState.get(position).getTitle());
+                doCoolStuff(position);
+
+            }
         });
-
-
         return convertView;
+    }
+
+    public void doCoolStuff(int position){
+        Spinner busSpinner = ((MainActivity)this.mContext).findViewById(R.id.BusLineSpinner);
+        BusLineSpinnerAdapter busAdapter = (BusLineSpinnerAdapter)busSpinner.getAdapter();
+        ArrayList<BusLineSpinnerData> busLines = busAdapter.getListState();
+        ArrayList<Integer> busses = this.listState.get(position).getNumbers();
+        for (int i = 0; i < busLines.size();i++){
+            busLines.get(i).setSelected(busses.contains(busLines.get(i).getNumber()));
+        }
     }
 
     private void updateSelection() {
@@ -105,6 +129,6 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
 
     private class ViewHolder {
         private TextView mTextView;
-        private CheckBox mCheckBox;
+        private Button mButton;
     }
 }
