@@ -2,11 +2,8 @@ package com.android.zera.teamproject_app;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.view.View;
 
-import org.mapsforge.core.model.LatLong;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -34,7 +31,7 @@ public class Busstop extends Marker{
             GeoPoint position = new GeoPoint(lat,longi);
             this.setPosition(position);
             this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-           // this.setIcon(dra = res.getDrawable(R.drawable.bus_stop_icon, null));
+            this.setIcon(mainActivity.getResources().getDrawable(R.drawable.bus_stop_icon));
             MyInfoWindow infoWindow = new MyInfoWindow(R.layout.information_bubble, map, mainActivity,sonstigeParameter);
             this.setInfoWindow(infoWindow);
         }

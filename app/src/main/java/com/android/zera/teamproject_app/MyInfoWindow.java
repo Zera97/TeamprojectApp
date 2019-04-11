@@ -1,6 +1,7 @@
 package com.android.zera.teamproject_app;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
 import org.osmdroid.views.MapView;
@@ -23,7 +24,7 @@ public class MyInfoWindow extends InfoWindow {
 
     public void onOpen(final Object arg0) {
         TextView txtTitle = (TextView) mView.findViewById(R.id.bubble_title);
-
+        Log.e("INFOWINDOW",params[0]);
         txtTitle.setText(params[0]);
     }
 

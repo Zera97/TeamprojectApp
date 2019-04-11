@@ -99,8 +99,8 @@ public class MainActivity extends AppCompatActivity
         mapController.setCenter(startPoint);
 
         this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
-        this.mLocationOverlay.enableMyLocation();
-        this.mLocationOverlay.enableFollowLocation();
+        //this.mLocationOverlay.enableMyLocation();
+        //this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
     }
 
@@ -167,9 +167,10 @@ public class MainActivity extends AppCompatActivity
                     for(int i = 0;i <size;i++){
                         String read = "$.busstops[" + i + "]";
                         dummy = ctx.read(read,StopData.class);
-                        System.out.println(dummy);
+                        arrayOfDummys.add(dummy);
                     }
 
+                    busstops = new ArrayList<>();
 
                     for(StopData bSD : arrayOfDummys ){
                         String[] values = {bSD.name,bSD.coordinate2,bSD.coordinate1};
