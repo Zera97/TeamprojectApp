@@ -23,6 +23,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
+import com.jayway.jsonpath.ReadContext;
+import com.jayway.jsonpath.spi.json.GsonJsonProvider;
+import com.jayway.jsonpath.spi.json.JsonProvider;
+import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+import com.jayway.jsonpath.spi.mapper.MappingProvider;
+
+import net.minidev.json.JSONArray;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -37,7 +48,10 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapEventsReceiver {
@@ -45,9 +59,10 @@ public class MainActivity extends AppCompatActivity
     private MapView map = null;
     private IMapController mapController = null;
     private MyLocationNewOverlay mLocationOverlay = null;
-    private Context ctx;
+    private Context context;
     private Resources res;
     private ArrayList<Busstop> busstops;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = getApplicationContext();
 
         this.checkPermissions();
         this.initSidebar();
@@ -67,10 +83,8 @@ public class MainActivity extends AppCompatActivity
         this.initFavoritsSlider();
         Log.e("Hallo", "Ich habe initialisiert");
 
-        ctx = getApplicationContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        //this.setBusstops();
+        Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
     }
 
     private void initMap(){
@@ -84,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         GeoPoint startPoint = new GeoPoint(51.826918, 10.760942);
         mapController.setCenter(startPoint);
 
-        this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
+        this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
         this.mLocationOverlay.enableMyLocation();
         this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
@@ -115,22 +129,62 @@ public class MainActivity extends AppCompatActivity
         String testJSON = createJSON(new TestData("APP", 1, "test"));
         System.out.println(testJSON);
         if (b) {
-            new MiddleWareConnector(this).execute(testJSON);
-            //ReadContext ctx = JsonPath.parse(testJSON);
-            //System.out.println(ctx.read("$.commandCode"));
+            MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
+                @Override
+                public void onFinished(String result) {
+
+                    System.out.println(result);
+
+                    com.jayway.jsonpath.Configuration.setDefaults(new com.jayway.jsonpath.Configuration.Defaults() {
+
+                        private final JsonProvider jsonProvider = new GsonJsonProvider();
+                        private final MappingProvider mappingProvider = new GsonMappingProvider();
+
+                        @Override
+                        public JsonProvider jsonProvider() {
+                            return jsonProvider;
+                        }
+
+                        @Override
+                        public MappingProvider mappingProvider() {
+                            return mappingProvider;
+                        }
+
+                        @Override
+                        public Set<Option> options() {
+                            return EnumSet.noneOf(Option.class);
+                        }
+                    });
+
+                    ReadContext ctx = JsonPath.parse(result);
+
+                    JsonArray busStopData = ctx.read("$.busstops[*]");
+
+                    StopData dummy;
+                    ArrayList<StopData> arrayOfDummys = new ArrayList<>();
+                    int size = busStopData.size();
+
+                    for(int i = 0;i <size;i++){
+                        String read = "$.busstops[" + i + "]";
+                        dummy = ctx.read(read,StopData.class);
+                        System.out.println(dummy);
+                    }
+
+
+                    for(StopData bSD : arrayOfDummys ){
+                        String[] values = {bSD.name,bSD.coordinate2,bSD.coordinate1};
+                        Busstop stop = new Busstop(map, values,context, res);
+                        map.getOverlayManager().add(stop);
+                        busstops.add(stop);
+                    }
+                }
+            });
+
+            task.execute(testJSON);
 
         } else {
             Toast.makeText(this, "Bitte für eine Internetverbindung sorgen.",
                     Toast.LENGTH_SHORT).show();
-            /*
-            b = haveNetworkConnection();
-            while(!b){
-                if(b){
-                    new MiddleWareConnector(this).execute();
-                    break;
-                }
-                b = haveNetworkConnection();
-            } */
         }
 
     }
@@ -140,7 +194,6 @@ public class MainActivity extends AppCompatActivity
     private String createJSON(Object dataObj) {
         Gson gson = new Gson();
         String data = gson.toJson(dataObj);
-
         return data;
     }
 
@@ -302,21 +355,6 @@ public class MainActivity extends AppCompatActivity
             favorites2.add(null);
             return favorites2;
         }
-        /*
-        ArrayList<ArrayList<Integer>> favorites = new ArrayList<ArrayList<Integer>>();
-        favorites.add(null);
-        favorites.add(new ArrayList<Integer>());
-        favorites.get(1).add(new Integer(201));
-        favorites.get(1).add(new Integer(202));
-        favorites.get(1).add(new Integer(203));
-        favorites.add(new ArrayList<Integer>());
-        favorites.get(2).add(new Integer(204));
-        favorites.get(2).add(new Integer(205));
-        favorites.get(2).add(new Integer(206));
-        favorites.get(2).add(new Integer(207));
-        favorites.add(new ArrayList<Integer>());
-        favorites.get(3).add(new Integer(208));
-        favorites.get(3).add(new Integer(209));*/
     }
 
     public void addFavorite(View v) {
@@ -444,16 +482,5 @@ public class MainActivity extends AppCompatActivity
     }
 
     //endregion
-
-    private void setBusstops() {
-        String[] test = {"Hallo Dirk", "51.826918", "10.760942"};
-        Busstop stop = new Busstop(map, test, this, res);
-        map.getOverlayManager().add(stop);
-        String[] test2 = {"Hallo Fabi", "51.926918", "10.960942"};
-        Busstop stop2 = new Busstop(map, test2, this, res);
-        map.getOverlayManager().add(stop2);
-        busstops.add(stop);
-        busstops.add(stop2);
-    }
 
 }

@@ -17,12 +17,18 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
     //Art der Parameter,Progress,Rückgabe
 
-    private final String TAG = this.getClass().getSimpleName();
+    public interface TaskListener {
+        void onFinished(String result);
+    }
 
+
+    private final String TAG = this.getClass().getSimpleName();
+    private TaskListener taskListener = null;
     private WeakReference<Activity> parentActivity;
 
-    public MiddleWareConnector(Activity activity) {
+    public MiddleWareConnector(Activity activity, TaskListener listener) {
         parentActivity = new WeakReference<Activity>(activity);
+        this.taskListener = listener;
     }
 
 
@@ -85,11 +91,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         System.out.println("Habe Input gesendet: " + msg);
         String fromServer = "";
         try {
-
-            //while(inputStream.available()>0)
-              //  fromServer += inputStream.readUTF();
-
-            fromServer = inputStream.readLine();
+            fromServer = inputStream.readUTF();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -110,10 +112,14 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        /*
-        Activity activity = parentActivity.get();
-        Button txt = (Button) activity.findViewById(R.id.btn_verbindung);
-        txt.setText(result); */
+        super.onPostExecute(result);
+
+        // In onPostExecute we check if the listener is valid
+        if(this.taskListener != null) {
+
+            // And if it is we call the callback function on it.
+            this.taskListener.onFinished(result);
+        }
     }
 
     @Override
