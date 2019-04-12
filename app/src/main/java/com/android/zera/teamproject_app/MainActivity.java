@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
+        Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
         this.checkPermissions();
         this.initSidebar();
@@ -82,9 +83,6 @@ public class MainActivity extends AppCompatActivity
         this.initBusLineSlider();
         this.initFavoritsSlider();
         Log.e("Hallo", "Ich habe initialisiert");
-
-
-        Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
     }
 
     private void initMap(){
@@ -125,9 +123,7 @@ public class MainActivity extends AppCompatActivity
 
     public void TestVerbindung(View v) {
         boolean b = isNetworkAvailable();
-        System.out.println(b ? "ja" : "nein");
         String testJSON = createJSON(new TestData("APP", 1, "test"));
-        System.out.println(testJSON);
         if (b) {
             MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
                 @Override

@@ -2,7 +2,6 @@ package com.android.zera.teamproject_app;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -14,7 +13,6 @@ public class Busstop extends Marker{
         private MapView map;
         private Context mainActivity;
         private Resources res;
-        private Drawable dra;
 
         public Busstop(MapView mapView, String[] sonstigeParameter, Context mainActivity, Resources res) {
             super(mapView);

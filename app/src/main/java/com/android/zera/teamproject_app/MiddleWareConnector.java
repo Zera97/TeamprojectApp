@@ -2,7 +2,6 @@ package com.android.zera.teamproject_app;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.widget.Button;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -21,8 +20,6 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         void onFinished(String result);
     }
 
-
-    private final String TAG = this.getClass().getSimpleName();
     private TaskListener taskListener = null;
     private WeakReference<Activity> parentActivity;
 
@@ -88,7 +85,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
             return null;
         }
-        System.out.println("Habe Input gesendet: " + msg);
+        System.out.println("Habe an Server gesendet: " + msg);
         String fromServer = "";
         try {
             fromServer = inputStream.readUTF();
@@ -96,7 +93,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
             return null;
         }
-        System.out.println("Habe Output gelesen: " + fromServer);
+        System.out.println("Habe vom Server gelesen: " + fromServer);
         try {
             outputStream.close();
             inputStream.close();
@@ -113,11 +110,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-
-        // In onPostExecute we check if the listener is valid
         if(this.taskListener != null) {
-
-            // And if it is we call the callback function on it.
             this.taskListener.onFinished(result);
         }
     }
