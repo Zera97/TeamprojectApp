@@ -3,9 +3,13 @@ package com.android.zera.teamproject_app;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -59,42 +63,52 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         }
         System.out.println("Socket erzeugt.");
         DataOutputStream outputStream;
+        PrintWriter pr;
         try {
             outputStream = new DataOutputStream(socket.getOutputStream());
+            pr = new PrintWriter(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        DataInputStream inputStream;
+        InputStream inputStream;
+        InputStreamReader isr;
+        BufferedReader br;
         try {
-            inputStream = new DataInputStream(socket.getInputStream());
+            inputStream = socket.getInputStream();
+            isr = new InputStreamReader(inputStream);
+            br = new BufferedReader(isr);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
         System.out.println("Streams erzeugt.");
         try {
-            outputStream.writeUTF(msg);
-        } catch (IOException e) {
+            pr.println(msg);
+            pr.flush();
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         try {
-            outputStream.flush();
-        } catch (IOException e) {
+            pr.flush();
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         System.out.println("Habe an Server gesendet: " + msg);
         String fromServer = "";
         try {
-            fromServer = inputStream.readUTF();
+            fromServer = br.readLine();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
         System.out.println("Habe vom Server gelesen: " + fromServer);
         try {
+            br.close();
+            isr.close();
+            pr.close();
             outputStream.close();
             inputStream.close();
             socket.close();
