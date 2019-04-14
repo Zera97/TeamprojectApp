@@ -30,10 +30,7 @@ import com.jayway.jsonpath.ReadContext;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
-import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
-
-import net.minidev.json.JSONArray;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -49,7 +46,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -308,6 +304,38 @@ public class MainActivity extends AppCompatActivity
         spinner.setAdapter(myAdapter);
     }
 
+    private void saveFavoritsToFile(){
+        Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
+        FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
+        ArrayList<FavoritsData> favorites = myAdapter.getListState();
+        StringBuilder allFavorits = new StringBuilder();
+        ArrayList<Integer> fav = null;
+        for(int i = 1; i < favorites.size(); i++){
+            fav = favorites.get(i).getNumbers();
+            StringBuilder singleFavorit = new StringBuilder();
+            System.out.print("FAV SIZE: " + fav.size());
+            for (int j = 0; j < fav.size(); j++){
+                singleFavorit.append(fav.get(j).intValue());
+                if(j < fav.size()-1){
+                    singleFavorit.append(";");
+                }
+            }
+            System.out.print("SINGLE FAVORIT: " + singleFavorit.toString() + " ");
+            allFavorits.append(singleFavorit.toString());
+            if(i < favorites.size()-1){
+                allFavorits.append("\n");
+            }
+        }
+        String content = allFavorits.toString();
+        System.out.println("CONTENT ON DESRTOY: \n\n" + content);
+        try {
+            FileOutputStream outStream = getApplicationContext().openFileOutput("wimb_favorits", this.MODE_PRIVATE);
+            outStream.write(content.getBytes());
+            outStream.close();
+        }
+        catch(Exception e){}
+    }
+
     private ArrayList<ArrayList<Integer>> getAllFavoritesFromFile() {
         ArrayList<ArrayList<Integer>> favorites = new ArrayList<ArrayList<Integer>>();
         favorites.add(null);
@@ -373,34 +401,7 @@ public class MainActivity extends AppCompatActivity
             FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
             ArrayList<FavoritsData> favorites = myAdapter.getListState();
             favorites.add(newFavorit);
-
-            StringBuilder allFavorits = new StringBuilder();
-            ArrayList<Integer> fav = null;
-            for(int i = 1; i < favorites.size(); i++){
-                fav = favorites.get(i).getNumbers();
-                StringBuilder singleFavorit = new StringBuilder();
-                System.out.print("FAV SIZE: " + fav.size());
-                for (int j = 0; j < fav.size(); j++){
-                    singleFavorit.append(fav.get(j).intValue());
-                    if(j < fav.size()-1){
-                        singleFavorit.append(";");
-                    }
-                }
-                System.out.print("SINGLE FAVORIT: " + singleFavorit.toString() + " ");
-                allFavorits.append(singleFavorit.toString());
-                if(i < favorites.size()-1){
-                    allFavorits.append("\n");
-                }
-            }
-            String content = allFavorits.toString();
-            System.out.println("CONTENT ON DESRTOY: \n\n" + content);
-            try {
-                FileOutputStream outStream = getApplicationContext().openFileOutput("wimb_favorits", this.MODE_PRIVATE);
-                outStream.write(content.getBytes());
-                outStream.close();
-            }
-            catch(Exception e){}
-
+            this.saveFavoritsToFile();
         }
 
     }
@@ -424,35 +425,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDestroy() {
         System.out.print("HALLO HIER ON DESTROY UND SO");
-        Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
-        FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter) favoritSpinner.getAdapter();
-        ArrayList<FavoritsData> favorites = myAdapter.getListState();
-        StringBuilder allFavorits = new StringBuilder();
-        ArrayList<Integer> fav = null;
-        for (int i = 1; i < favorites.size(); i++) {
-            fav = favorites.get(i).getNumbers();
-            StringBuilder singleFavorit = new StringBuilder();
-            for (int j = 0; j < fav.size(); j++) {
-                singleFavorit.append(fav.get(j).intValue());
-                if (i < favorites.size() - 1) {
-                    singleFavorit.append(";");
-                }
-            }
-            System.out.print("SINGLE FAVORIT: " + singleFavorit.toString());
-            allFavorits.append(singleFavorit.toString());
-            if (i < favorites.size() - 1) {
-                allFavorits.append("\n");
-            }
-        }
-        String content = allFavorits.toString();
-        System.out.println("CONTENT ON DESRTOY: " + content);
-        try {
-            FileOutputStream outStream = getApplicationContext().openFileOutput("wimb_favorits", this.MODE_PRIVATE);
-            outStream.write(content.getBytes());
-            outStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.saveFavoritsToFile();
         super.onDestroy();
     }
 
