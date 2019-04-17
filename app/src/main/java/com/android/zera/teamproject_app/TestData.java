@@ -1,15 +1,19 @@
 package com.android.zera.teamproject_app;
 
+import java.util.ArrayList;
+
 public class TestData {
 
     String sender;
     int id;
     String code;
+    ArrayList<Integer> busLinien;
 
-    public TestData(String sentBy, int id, String code){
+    public TestData(String sentBy, int id, String code,ArrayList<Integer> buslinien){
         this.sender = sentBy;
         this.id = id;
         this.code = code;
+        this.busLinien = buslinien;
     }
 
     public String getSender() {

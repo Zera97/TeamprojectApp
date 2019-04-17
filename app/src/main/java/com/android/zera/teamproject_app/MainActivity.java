@@ -123,7 +123,10 @@ public class MainActivity extends AppCompatActivity
 
     public void TestVerbindung(View v) {
         boolean b = isNetworkAvailable();
-        String testJSON = createJSON(new TestData("APP", 1, "test"));
+        ArrayList<Integer> test = new ArrayList<>();
+        test.add(201);
+        test.add(202);
+        String testJSON = createJSON(new TestData("APP", 1, "test",test));
         if (b) {
             MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
                 @Override
