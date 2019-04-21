@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
         ArrayList<Integer> test = new ArrayList<>();
         test.add(201);
         test.add(202);
-        String testJSON = createJSON(new TestData("APP", 1, "test",test));
+        String testJSON = createJSON(new TestData("APP", 3, "test",test));
         if (b) {
             MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
                 @Override
