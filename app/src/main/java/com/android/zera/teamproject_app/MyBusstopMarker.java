@@ -7,14 +7,14 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
-public class Busstop extends Marker{
+public class MyBusstopMarker extends Marker{
 
         private String[] sonstigeParameter;
         private MapView map;
         private Context mainActivity;
         private Resources res;
 
-        public Busstop(MapView mapView, String[] sonstigeParameter, Context mainActivity, Resources res) {
+        public MyBusstopMarker(MapView mapView, String[] sonstigeParameter, Context mainActivity, Resources res) {
             super(mapView);
             this.sonstigeParameter = sonstigeParameter;
             map = mapView;

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
     private MyLocationNewOverlay mLocationOverlay = null;
     private Context context;
     private Resources res;
-    private ArrayList<Busstop> busstops;
+    private ArrayList<MyBusstopMarker> myBusstopMarkers;
     private Handler busHandler;
     private Runnable mHandlerTask;
     private final int INTERVAL = 10000 ;
@@ -66,9 +66,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //referenz zum einfügen der Bushaltestellen
-        //https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons
-        //https://github.com/json-path/JsonPath
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -78,11 +75,9 @@ public class MainActivity extends AppCompatActivity
         this.checkPermissions();
         this.initSidebar();
         this.initMap();
-
-        Log.e("Hallo", "Ich initialisiere gleich");
+        this.initJSONParser();
         this.initBusLineSlider();
         this.initFavoritsSlider();
-        Log.e("Hallo", "Ich habe initialisiert");
 
         busHandler = new Handler();
         mHandlerTask = new Runnable()
@@ -143,27 +138,6 @@ public class MainActivity extends AppCompatActivity
 
                     System.out.println(result);
 
-                    com.jayway.jsonpath.Configuration.setDefaults(new com.jayway.jsonpath.Configuration.Defaults() {
-
-                        private final JsonProvider jsonProvider = new GsonJsonProvider();
-                        private final MappingProvider mappingProvider = new GsonMappingProvider();
-
-                        @Override
-                        public JsonProvider jsonProvider() {
-                            return jsonProvider;
-                        }
-
-                        @Override
-                        public MappingProvider mappingProvider() {
-                            return mappingProvider;
-                        }
-
-                        @Override
-                        public Set<Option> options() {
-                            return EnumSet.noneOf(Option.class);
-                        }
-                    });
-
                     ReadContext ctx = JsonPath.parse(result);
 
                     JsonArray busStopData = ctx.read("$.busstops[*]");
@@ -178,13 +152,13 @@ public class MainActivity extends AppCompatActivity
                         arrayOfDummys.add(dummy);
                     }
 
-                    busstops = new ArrayList<>();
+                    myBusstopMarkers = new ArrayList<>();
 
                     for(BusStopData bSD : arrayOfDummys ){
                         String[] values = {bSD.name,bSD.coordinate2,bSD.coordinate1};
-                        Busstop stop = new Busstop(map, values,context, res);
+                        MyBusstopMarker stop = new MyBusstopMarker(map, values,context, res);
                         map.getOverlayManager().add(stop);
-                        busstops.add(stop);
+                        myBusstopMarkers.add(stop);
                     }
                 }
             });
@@ -200,11 +174,39 @@ public class MainActivity extends AppCompatActivity
 
     //endregion
 
+    //region JSON
+
     private String createJSON(Object dataObj) {
         Gson gson = new Gson();
         String data = gson.toJson(dataObj);
         return data;
     }
+
+
+    private void initJSONParser(){
+        com.jayway.jsonpath.Configuration.setDefaults(new com.jayway.jsonpath.Configuration.Defaults() {
+
+            private final JsonProvider jsonProvider = new GsonJsonProvider();
+            private final MappingProvider mappingProvider = new GsonMappingProvider();
+
+            @Override
+            public JsonProvider jsonProvider() {
+                return jsonProvider;
+            }
+
+            @Override
+            public MappingProvider mappingProvider() {
+                return mappingProvider;
+            }
+
+            @Override
+            public Set<Option> options() {
+                return EnumSet.noneOf(Option.class);
+            }
+        });
+    }
+
+    //endregion
 
     //region Sidebar
 
@@ -447,7 +449,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
-        for(Busstop myMarker : busstops){
+        for(MyBusstopMarker myMarker : myBusstopMarkers){
             if(myMarker.isInfoWindowShown() && p != myMarker.getPosition()){
                 InfoWindow.closeAllInfoWindowsOn(map);
             }
@@ -480,8 +482,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void doSomething(){
-        Toast.makeText(this, "Hallo Dirk.",
-                Toast.LENGTH_SHORT).show();
-    }
+        MessageData msgObj = new MessageData("APP", 2, "test");
+        //msgObj.setSelection();
+        String message = createJSON(msgObj);
+        MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
+            @Override
+            public void onFinished(String result) {
+                System.out.println(result);
+            }
+        });
 
+        task.execute(message);
+    }
 }
