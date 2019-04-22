@@ -1,6 +1,7 @@
 package com.android.zera.teamproject_app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
@@ -24,10 +25,10 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
     }
 
     private TaskListener taskListener = null;
-    private WeakReference<Activity> parentActivity;
+    private Context mContext = null;
 
-    public MiddleWareConnector(Activity activity, TaskListener listener) {
-        parentActivity = new WeakReference<Activity>(activity);
+    public MiddleWareConnector(Context activity, TaskListener listener) {
+        this.mContext = activity;
         this.taskListener = listener;
     }
 

@@ -3,20 +3,34 @@
     android:id="@+id/bubble_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/bonuspack_bubble" >
+    android:background="@drawable/bonuspack_bubble"
+    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/bubble_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Title"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="#000000"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+    <TextView
+        android:id="@+id/bubble_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="Title"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/bubble_subtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="Title"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
 
 </LinearLayout>

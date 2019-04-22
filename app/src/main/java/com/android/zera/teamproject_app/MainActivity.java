@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -58,6 +59,9 @@ public class MainActivity extends AppCompatActivity
     private Context context;
     private Resources res;
     private ArrayList<Busstop> busstops;
+    private Handler busHandler;
+    private Runnable mHandlerTask;
+    private final int INTERVAL = 10000 ;
 
 
     @Override
@@ -79,6 +83,17 @@ public class MainActivity extends AppCompatActivity
         this.initBusLineSlider();
         this.initFavoritsSlider();
         Log.e("Hallo", "Ich habe initialisiert");
+
+        busHandler = new Handler();
+        this.startRepeatingTask();
+        mHandlerTask = new Runnable()
+        {
+            @Override
+            public void run() {
+                doSomething();
+                busHandler.postDelayed(mHandlerTask, INTERVAL);
+            }
+        };
     }
 
     private void initMap(){
@@ -93,8 +108,8 @@ public class MainActivity extends AppCompatActivity
         mapController.setCenter(startPoint);
 
         this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
-        //this.mLocationOverlay.enableMyLocation();
-        //this.mLocationOverlay.enableFollowLocation();
+        this.mLocationOverlay.enableMyLocation();
+        this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
     }
 
@@ -119,10 +134,7 @@ public class MainActivity extends AppCompatActivity
 
     public void TestVerbindung(View v) {
         boolean b = isNetworkAvailable();
-        ArrayList<Integer> test = new ArrayList<>();
-        test.add(201);
-        test.add(202);
-        String testJSON = createJSON(new TestData("APP", 3, "test",test));
+        String testJSON = createJSON(new MessageData("APP", 1, "test"));
         if (b) {
             MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
                 @Override
@@ -155,19 +167,19 @@ public class MainActivity extends AppCompatActivity
 
                     JsonArray busStopData = ctx.read("$.busstops[*]");
 
-                    StopData dummy;
-                    ArrayList<StopData> arrayOfDummys = new ArrayList<>();
+                    BusStopData dummy;
+                    ArrayList<BusStopData> arrayOfDummys = new ArrayList<>();
                     int size = busStopData.size();
 
                     for(int i = 0;i <size;i++){
                         String read = "$.busstops[" + i + "]";
-                        dummy = ctx.read(read,StopData.class);
+                        dummy = ctx.read(read, BusStopData.class);
                         arrayOfDummys.add(dummy);
                     }
 
                     busstops = new ArrayList<>();
 
-                    for(StopData bSD : arrayOfDummys ){
+                    for(BusStopData bSD : arrayOfDummys ){
                         String[] values = {bSD.name,bSD.coordinate2,bSD.coordinate1};
                         Busstop stop = new Busstop(map, values,context, res);
                         map.getOverlayManager().add(stop);
@@ -455,5 +467,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     //endregion
+
+    private void startRepeatingTask()
+    {
+        mHandlerTask.run();
+    }
+
+    private void stopRepeatingTask()
+    {
+        busHandler.removeCallbacks(mHandlerTask);
+    }
+
+    private void doSomething(){
+        Toast.makeText(this, "Hallo Dirk.",
+                Toast.LENGTH_SHORT).show();
+    }
 
 }
