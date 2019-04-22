@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity
         this.checkPermissions();
         this.initSidebar();
         this.initMap();
-        this.initJSONParser();
         this.initBusLineSlider();
         this.initFavoritsSlider();
+        this.initJSONParser();
 
         busHandler = new Handler();
         mHandlerTask = new Runnable()
