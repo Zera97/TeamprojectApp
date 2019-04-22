@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity
         Log.e("Hallo", "Ich habe initialisiert");
 
         busHandler = new Handler();
-        this.startRepeatingTask();
         mHandlerTask = new Runnable()
         {
             @Override
@@ -94,6 +93,8 @@ public class MainActivity extends AppCompatActivity
                 busHandler.postDelayed(mHandlerTask, INTERVAL);
             }
         };
+
+        this.startRepeatingTask();
     }
 
     private void initMap(){
