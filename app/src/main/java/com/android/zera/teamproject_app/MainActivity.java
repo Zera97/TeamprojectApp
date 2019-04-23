@@ -104,8 +104,8 @@ public class MainActivity extends AppCompatActivity
         mapController.setCenter(startPoint);
 
         this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
-        this.mLocationOverlay.enableMyLocation();
-        this.mLocationOverlay.enableFollowLocation();
+        //this.mLocationOverlay.enableMyLocation();
+        //this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
     }
 
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onFinished(String result) {
 
-                    System.out.println(result);
+                    //System.out.println(result);
 
                     ReadContext ctx = JsonPath.parse(result);
 

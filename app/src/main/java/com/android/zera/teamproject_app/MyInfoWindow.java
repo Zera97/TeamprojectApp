@@ -47,6 +47,7 @@ public class MyInfoWindow extends InfoWindow {
         //msgObj.setStopID();
         //msgObj.settime();
         String message = createJSON(msgObj);
+        System.out.println(message);
         MiddleWareConnector task = new MiddleWareConnector(mainContext, new MiddleWareConnector.TaskListener() {
             @Override
             public void onFinished(String result) {
