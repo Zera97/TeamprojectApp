@@ -21,6 +21,8 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -91,12 +93,14 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        //this.startRepeatingTask();
+       // this.startRepeatingTask();
     }
 
+/*
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        Log.e("INFLATE", "LOL");
         getMenuInflater().inflate(R.menu.favorit_longpress_menu,menu);
     }
 
@@ -112,7 +116,7 @@ public class MainActivity extends AppCompatActivity
             default:
                 return super.onContextItemSelected(item);
         }
-    }
+    }*/
 
     private void initMap(){
         map = (MapView) findViewById(R.id.map);
@@ -152,7 +156,7 @@ public class MainActivity extends AppCompatActivity
 
     public void TestVerbindung(View v) {
         boolean b = isNetworkAvailable();
-        String testJSON = createJSON(new MessageData("APP", 1, "test"));
+        String testJSON = createJSON(new MessageData("APP", 0, "1"));
         if (b) {
             MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
                 @Override
@@ -173,11 +177,13 @@ public class MainActivity extends AppCompatActivity
                         dummy = ctx.read(read, BusStopData.class);
                         arrayOfDummys.add(dummy);
                     }
-
+                    for(BusStopData data : arrayOfDummys){
+                        System.out.println(data);
+                    }
                     myBusstopMarkers = new ArrayList<>();
 
                     for(BusStopData bSD : arrayOfDummys ){
-                        String[] values = {bSD.name,bSD.coordinate2,bSD.coordinate1};
+                        String[] values = {bSD.name,bSD.longitude,bSD.latitude,bSD.id + ""};
                         MyBusstopMarker stop = new MyBusstopMarker(map, values,context, res);
                         map.getOverlayManager().add(stop);
                         myBusstopMarkers.add(stop);
@@ -368,20 +374,11 @@ public class MainActivity extends AppCompatActivity
             lol.setHeight(600);
         }
         catch (Exception e){}
-
-
-        for(int i = 0; i < listVOs.size(); i++){
-
-            FavoritsSpinnerAdapter favAdapter = (FavoritsSpinnerAdapter)spinner2.getAdapter();
-            View v = favAdapter.getButton(i);
-            System.out.print(v.toString());
-            registerForContextMenu(v);
-        }
-
-        //registerForContextMenu((Spinner)findViewById(R.id.FavoritsSpinner));
     }
 
-    private void saveFavoritsToFile(){
+
+
+    protected void saveFavoritsToFile(){
         Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
         FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
         ArrayList<FavoritsData> favorites = myAdapter.getListState();
@@ -540,7 +537,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void doSomething(){
-        MessageData msgObj = new MessageData("APP", 2, "test");
+        MessageData msgObj = new MessageData("APP", 0, "2");
         //msgObj.setSelection();
         String message = createJSON(msgObj);
         MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {

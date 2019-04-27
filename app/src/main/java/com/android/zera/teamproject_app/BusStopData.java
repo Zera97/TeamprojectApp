@@ -2,24 +2,25 @@ package com.android.zera.teamproject_app;
 
 public class BusStopData {
 
-    protected int stopID;
+    protected int id;
     protected String name;
-    protected String coordinate2; //lat
-    protected String coordinate1; //longi
+    protected String latitude; //lat
+    protected String longitude; //longi
 
-    public BusStopData(String name, String lat, String longi) {
+    public BusStopData(String name, String latitude, String longitude,int id) {
+        this.id = id;
         this.name = name;
-        this.coordinate1 = lat;
-        this.coordinate2 = longi;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     @Override
     public String toString() {
-        return "StopData{" +
-                "Name='" + name + '\'' +
-                ", longi='" + coordinate1 + '\'' +
-                ", lat='" + coordinate2 + '\'' +
+        return "BusStopData{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
                 '}';
     }
-
 }

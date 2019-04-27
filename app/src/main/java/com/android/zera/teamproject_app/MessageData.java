@@ -10,7 +10,6 @@ public class MessageData {
     private ArrayList<Integer> selection;
     private int stopID;
     private int time;
-    private int connectionID;
     private double latitude;
     private double longitude;
 
@@ -66,14 +65,6 @@ public class MessageData {
 
     public void setTime(int time) {
         this.time = time;
-    }
-
-    public int getConnectionID() {
-        return connectionID;
-    }
-
-    public void setConnectionID(int connectionID) {
-        this.connectionID = connectionID;
     }
 
     public double getLatitude() {

@@ -43,8 +43,9 @@ public class MyInfoWindow extends InfoWindow {
 
 
     private void setSubtext() {
-        MessageData msgObj = new MessageData("APP", 3, "test");
-        //msgObj.setStopID();
+        MessageData msgObj = new MessageData("APP", 0, "3");
+        int stopID = Integer.parseInt(params[3]);
+        msgObj.setStopID(stopID);
         //msgObj.settime();
         String message = createJSON(msgObj);
         System.out.println(message);

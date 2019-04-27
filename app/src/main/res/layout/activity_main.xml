@@ -67,7 +67,7 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 android:layout_weight="0.15"
-                android:dropDownWidth="130dp"
+                android:dropDownWidth="300dp"
                 />
         </LinearLayout>
 

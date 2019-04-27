@@ -14,6 +14,7 @@ import java.lang.ref.WeakReference;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
@@ -51,7 +52,8 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         }
         ip = inet.getHostAddress();
         int port = 31896;
-        Socket socket;
+        Socket socket = null;
+        System.out.println("Socket erzeug122t.");
         try {
             socket = new Socket(ip,port);
         } catch (UnknownHostException e) {
@@ -60,6 +62,11 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+        try {
+            socket.setSoTimeout(8000);
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
         System.out.println("Socket erzeugt.");
         DataOutputStream outputStream;

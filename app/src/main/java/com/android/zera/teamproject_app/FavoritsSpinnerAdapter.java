@@ -1,15 +1,19 @@
 package com.android.zera.teamproject_app;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,10 +31,6 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         this.mContext = context;
         this.listState = (ArrayList<FavoritsData>) objects;
         this.myAdapter = this;
-    }
-
-    public View getButton(int position){
-        return getCustomView(position,null,null).findViewById(R.id.button);
     }
 
     public ArrayList<FavoritsData> getListState(){
@@ -57,22 +57,23 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
             convertView = layoutInflator.inflate(R.layout.fav_spinner, null);
             holder = new FavoritsSpinnerAdapter.ViewHolder();
             holder.mTextView = convertView
-                    .findViewById(R.id.text);
-            holder.mButton = convertView
-                    .findViewById(R.id.button);
-            holder.mCheckBox = convertView
-                    .findViewById(R.id.checkbox);
+                    .findViewById(R.id.edittext);
+            holder.mLoad = convertView
+                    .findViewById(R.id.load);
+            holder.mPopup = convertView
+                    .findViewById(R.id.popup);
             convertView.setTag(holder);
         } else {
             holder = (FavoritsSpinnerAdapter.ViewHolder) convertView.getTag();
         }
 
         //holder.mTextView.setText(listState.get(position).getTitle());
-        holder.mButton.setText(listState.get(position).getTitle());
+        holder.mLoad.setText(listState.get(position).getTitle());
 
 
         //region set MCheckBox
         // To check weather checked event fire from getview() or user input
+        /*
         isFromView = true;
         holder.mCheckBox.setChecked(false);
         isFromView = false;
@@ -86,7 +87,6 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 int getPosition = (Integer) buttonView.getTag();
                 //this.updateSelection();
                 if (!isFromView) {
@@ -95,54 +95,52 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
                 }
             }
         });
+        */
         //endregion
 
 
         if ((position == 0)) {
             holder.mTextView.setText("Meine Favoriten");
             holder.mTextView.setVisibility(View.VISIBLE);
-            holder.mButton.setVisibility(View.GONE);
+            holder.mLoad.setVisibility(View.GONE);
+            holder.mPopup.setVisibility(View.GONE);
         } else {
-            holder.mTextView.setText("");
-            holder.mTextView.setVisibility(View.GONE);
-            holder.mButton.setVisibility(View.VISIBLE);
-            holder.mButton.setText(listState.get(position).getTitle());
+            holder.mTextView.setText(listState.get(position).getTitle());
+            holder.mTextView.setVisibility(View.VISIBLE);
+            holder.mLoad.setText("X");
+            holder.mLoad.setVisibility(View.VISIBLE);
+            holder.mPopup.setText("o");
+            holder.mPopup.setVisibility(View.VISIBLE);
         }
 
+        //holder.mTextView.setEnabled(false);
+        holder.mTextView.setFocusableInTouchMode(false);
+        //holder.mTextView.setInputType(InputType.TYPE_NULL);
+        holder.mTextView.setTag(position);
+        holder.mLoad.setTag(position);
+        holder.mPopup.setTag(position);
 
-        holder.mButton.setTag(position);
-        holder.mButton.setOnClickListener(new OnClickListener() {
+        holder.mLoad.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = (Integer) v.getTag();
                 if(position == 0)return;
                 Log.e("TEST","Hallo " + position + " " + listState.get(position).getTitle());
-                doCoolStuff(position);
+                doClick(position);
             }
         });
 
-        holder.mButton.setOnLongClickListener(new View.OnLongClickListener(){
+        holder.mPopup.setOnClickListener(new View.OnClickListener(){
 
             @Override
-            public boolean onLongClick(View v) {
-                int position = (Integer) v.getTag();
-                if(position == 0) return false;
-                Log.e("TEST","Hallo Long Click " + position + " " + listState.get(position).getTitle());
-                holder.mCheckBox.setVisibility(View.VISIBLE);
-                //holder.mCheckBox.setSelected(true);
-                myAdapter.notifyDataSetChanged();
-                //myAdapter.updateSelection();
-
-                //deleteCoolStuff(position);
-                return true;
+            public void onClick(View view) {
+                showMenu(view);
             }
         });
-
-
         return convertView;
     }
 
-    public void doCoolStuff(int position){
+    public void doClick(int position){
         Spinner busSpinner = ((MainActivity)this.mContext).findViewById(R.id.BusLineSpinner);
         BusLineSpinnerAdapter busAdapter = (BusLineSpinnerAdapter)busSpinner.getAdapter();
         ArrayList<BusLineSpinnerData> busLines = busAdapter.getListState();
@@ -152,9 +150,7 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         }
     }
 
-    public void deleteCoolStuff(int position){
-    }
-
+/*
     private void updateSelection() {
         Log.e("FavoritsSpinnerAdapter", "Geschafft");
         for(FavoritsData f : this.listState){
@@ -163,10 +159,76 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
             }
         }
     }
+    */
+    private View lastSender = null;
+
+    public void showMenu(View v)
+    {
+        View sender = getCustomView((int)v.getTag(),null,null);
+        this.lastSender = sender;
+        //EditText e = sender.findViewById(R.id.edittext);
+        //System.out.print("HALLO I BIMS: " + e.getText());
+
+        final int position = (int)v.getTag();
+
+        PopupMenu popup = new PopupMenu(this.mContext,v);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.option_1:
+                        rename(lastSender);
+                        break;
+                    case R.id.option_2:
+                        delete(position);
+                        break;
+                    default:
+                        return false;
+                }
+                System.out.println("Hat geklappt");
+                return true;
+            }
+        });// to implement on click event on items of menu
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.favorit_longpress_menu, popup.getMenu());
+        popup.show();
+    }
+
+    private void rename(View sender){
+        TextView e = sender.findViewById(R.id.edittext);
+        System.out.print("HALLO I BIMS: " + e.getText());
+
+        e.setEnabled(true);
+        myAdapter.notifyDataSetChanged();
+        e.setFocusable(true);
+        myAdapter.notifyDataSetChanged();
+        e.setFocusableInTouchMode(true);
+        myAdapter.notifyDataSetChanged();
+        e.setClickable(true);
+        myAdapter.notifyDataSetChanged();
+        e.setCursorVisible(true);
+        myAdapter.notifyDataSetChanged();
+        e.requestFocus();
+        myAdapter.notifyDataSetChanged();
+        //e.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        //e.setText(e.getText() + "+");
+
+
+        int position = (int)e.getTag();//sender.findViewById(R.id.popup).getTag();
+        FavoritsData f = this.listState.get(position);
+        f.setTitle(e.getText().toString());
+        myAdapter.notifyDataSetChanged();
+    }
+    private void delete(int position){
+        this.listState.remove(position);
+        ((MainActivity)this.mContext).saveFavoritsToFile();
+        myAdapter.notifyDataSetChanged();
+    }
 
     private class ViewHolder {
         private TextView mTextView;
-        private CheckBox mCheckBox;
-        private Button mButton;
+        private Button mLoad;
+        private Button mPopup;
     }
 }

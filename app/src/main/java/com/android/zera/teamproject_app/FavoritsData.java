@@ -12,6 +12,10 @@ public class FavoritsData {
         return this.title;
     }
 
+    public void setTitle(String t){
+        this.title = t;
+    }
+
     public boolean isSelected() {
         return selected;
     }
