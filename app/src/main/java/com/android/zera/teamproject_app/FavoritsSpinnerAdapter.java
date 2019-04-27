@@ -26,6 +26,10 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         this.myAdapter = this;
     }
 
+    public View getButton(int position){
+        return getCustomView(position,null,null).findViewById(R.id.button);
+    }
+
     public ArrayList<FavoritsData> getListState(){
         return this.listState;
     }
@@ -105,6 +109,7 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
 
             }
         });
+        //holder.mButton.setOnLongClickListener();
         return convertView;
     }
 
@@ -127,7 +132,7 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         }
     }
 
-    private class ViewHolder {
+    public class ViewHolder{
         private TextView mTextView;
         private Button mButton;
     }

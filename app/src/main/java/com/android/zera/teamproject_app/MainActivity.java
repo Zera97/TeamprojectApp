@@ -15,8 +15,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +47,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Scanner;
@@ -89,7 +92,27 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        this.startRepeatingTask();
+        //this.startRepeatingTask();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.favorit_longpress_menu,menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.option_1:
+                Toast.makeText(this, "Option 1 wurde selektiert", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.option_2:
+                Toast.makeText(this, "Option 2 wurde selektiert", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     private void initMap(){
@@ -307,6 +330,15 @@ public class MainActivity extends AppCompatActivity
         }
         BusLineSpinnerAdapter myAdapter = new BusLineSpinnerAdapter(this, 0, listVOs);
         spinner.setAdapter(myAdapter);
+
+        Spinner spinner2 = (Spinner)findViewById(R.id.BusLineSpinner);
+        try{
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+            android.widget.ListPopupWindow lol = (android.widget.ListPopupWindow)popup.get(spinner2);
+            lol.setHeight(600);
+        }
+        catch (Exception e){}
     }
 
     private int[] getAllBusLines() {
@@ -327,6 +359,27 @@ public class MainActivity extends AppCompatActivity
         }
         FavoritsSpinnerAdapter myAdapter = new FavoritsSpinnerAdapter(this, 0, listVOs);
         spinner.setAdapter(myAdapter);
+
+
+        Spinner spinner2 = (Spinner)findViewById(R.id.FavoritsSpinner);
+        try{
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+            android.widget.ListPopupWindow lol = (android.widget.ListPopupWindow)popup.get(spinner2);
+            lol.setHeight(600);
+        }
+        catch (Exception e){}
+
+
+        for(int i = 0; i < listVOs.size(); i++){
+
+            FavoritsSpinnerAdapter favAdapter = (FavoritsSpinnerAdapter)spinner2.getAdapter();
+            View v = favAdapter.getButton(i);
+            System.out.print(v.toString());
+            registerForContextMenu(v);
+        }
+
+        //registerForContextMenu((Spinner)findViewById(R.id.FavoritsSpinner));
     }
 
     private void saveFavoritsToFile(){

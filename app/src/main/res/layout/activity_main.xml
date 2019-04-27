@@ -47,6 +47,7 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:visibility="visible"
+                android:dropDownWidth="100dp"
                 />
             <ImageButton
                 android:id="@+id/addToFavorits"
@@ -66,6 +67,7 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 android:layout_weight="0.15"
+                android:dropDownWidth="130dp"
                 />
         </LinearLayout>
 
