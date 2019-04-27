@@ -277,9 +277,16 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.punkt3) {
 
         } else if (id == R.id.nav_contact) {
+            Intent contacts = new Intent(this, WebViewActivity.class);
+            contacts.putExtra("url","https://hvb-harz.de/kontakt/");
+            startActivity(contacts);
+            finish();
 
         } else if (id == R.id.nav_impressum) {
-
+            Intent impressum = new Intent(this, WebViewActivity.class);
+            impressum.putExtra("url","https://hvb-harz.de/impressum/");
+            startActivity(impressum);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
