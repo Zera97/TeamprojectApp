@@ -4,9 +4,12 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -57,6 +60,8 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
                     .findViewById(R.id.text);
             holder.mButton = convertView
                     .findViewById(R.id.button);
+            holder.mCheckBox = convertView
+                    .findViewById(R.id.checkbox);
             convertView.setTag(holder);
         } else {
             holder = (FavoritsSpinnerAdapter.ViewHolder) convertView.getTag();
@@ -65,10 +70,32 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         //holder.mTextView.setText(listState.get(position).getTitle());
         holder.mButton.setText(listState.get(position).getTitle());
 
+
+        //region set MCheckBox
         // To check weather checked event fire from getview() or user input
-        //isFromView = true;
-        //holder.mButton.setChecked(listState.get(position).isSelected());
-        //isFromView = false;
+        isFromView = true;
+        holder.mCheckBox.setChecked(false);
+        isFromView = false;
+        if ((position == 0)) {
+            holder.mCheckBox.setVisibility(View.GONE);
+        } else {
+            holder.mCheckBox.setVisibility(View.INVISIBLE);
+        }
+        holder.mCheckBox.setTag(position);
+        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                int getPosition = (Integer) buttonView.getTag();
+                //this.updateSelection();
+                if (!isFromView) {
+                    listState.get(position).setSelected(isChecked);
+                    Log.e("TEST","Hallo" + getPosition + " " + listState.get(getPosition).getTitle());
+                }
+            }
+        });
+        //endregion
 
 
         if ((position == 0)) {
@@ -84,32 +111,34 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
 
 
         holder.mButton.setTag(position);
-
-        /*holder.mButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                int getPosition = (Integer) buttonView.getTag();
-                //this.updateSelection();
-                if (!isFromView) {
-                    //mContex
-                    listState.get(position).setSelected(isChecked);
-                    Log.e("TEST","Hallo" + getPosition + " " + listState.get(getPosition).getTitle());
-                }
-            }
-        });*/
-        holder.mButton.setOnClickListener(new View.OnClickListener() {
+        holder.mButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = (Integer) v.getTag();
                 if(position == 0)return;
                 Log.e("TEST","Hallo " + position + " " + listState.get(position).getTitle());
                 doCoolStuff(position);
-
             }
         });
-        //holder.mButton.setOnLongClickListener();
+
+        holder.mButton.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                int position = (Integer) v.getTag();
+                if(position == 0) return false;
+                Log.e("TEST","Hallo Long Click " + position + " " + listState.get(position).getTitle());
+                holder.mCheckBox.setVisibility(View.VISIBLE);
+                //holder.mCheckBox.setSelected(true);
+                myAdapter.notifyDataSetChanged();
+                //myAdapter.updateSelection();
+
+                //deleteCoolStuff(position);
+                return true;
+            }
+        });
+
+
         return convertView;
     }
 
@@ -123,6 +152,9 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         }
     }
 
+    public void deleteCoolStuff(int position){
+    }
+
     private void updateSelection() {
         Log.e("FavoritsSpinnerAdapter", "Geschafft");
         for(FavoritsData f : this.listState){
@@ -132,8 +164,9 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         }
     }
 
-    public class ViewHolder{
+    private class ViewHolder {
         private TextView mTextView;
+        private CheckBox mCheckBox;
         private Button mButton;
     }
 }
