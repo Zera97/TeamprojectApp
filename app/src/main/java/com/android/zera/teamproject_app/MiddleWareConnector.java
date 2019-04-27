@@ -1,6 +1,5 @@
 package com.android.zera.teamproject_app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -10,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.ref.WeakReference;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -18,8 +16,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
-
-    //Art der Parameter,Progress,Rückgabe
 
     public interface TaskListener {
         void onFinished(String result);

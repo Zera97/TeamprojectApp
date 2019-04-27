@@ -24,12 +24,12 @@ public class MyBusstopMarker extends Marker{
         }
 
         private void setMarkerSettings() {
-            double lat = Double.parseDouble(sonstigeParameter[1]);
-            double longi = Double.parseDouble(sonstigeParameter[2]);
+            double lat = Double.parseDouble(sonstigeParameter[2]);
+            double longi = Double.parseDouble(sonstigeParameter[1]);
             GeoPoint position = new GeoPoint(lat,longi);
             this.setPosition(position);
             this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            this.setIcon(mainActivity.getResources().getDrawable(R.drawable.bus_stop_icon));
+            this.setIcon(mainActivity.getResources().getDrawable(R.drawable.cute_stop));
             MyInfoWindow infoWindow = new MyInfoWindow(R.layout.information_bubble, map, mainActivity,sonstigeParameter);
             this.setInfoWindow(infoWindow);
         }

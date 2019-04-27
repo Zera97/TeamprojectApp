@@ -17,12 +17,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -42,6 +39,7 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -76,6 +74,8 @@ public class MainActivity extends AppCompatActivity
         context = getApplicationContext();
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
+        myBusstopMarkers = new ArrayList<>();
+
         this.checkPermissions();
         this.initSidebar();
         this.initMap();
@@ -94,29 +94,10 @@ public class MainActivity extends AppCompatActivity
         };
 
        // this.startRepeatingTask();
+
+
     }
 
-/*
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        Log.e("INFLATE", "LOL");
-        getMenuInflater().inflate(R.menu.favorit_longpress_menu,menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.option_1:
-                Toast.makeText(this, "Option 1 wurde selektiert", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.option_2:
-                Toast.makeText(this, "Option 2 wurde selektiert", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }*/
 
     private void initMap(){
         map = (MapView) findViewById(R.id.map);
@@ -127,12 +108,16 @@ public class MainActivity extends AppCompatActivity
         mapController = map.getController();
         mapController.setZoom(18.0);
         GeoPoint startPoint = new GeoPoint(51.826918, 10.760942);
+        //GeoPoint startPoint = new GeoPoint(51.84, 10.78);
         mapController.setCenter(startPoint);
 
         this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
         //this.mLocationOverlay.enableMyLocation();
         //this.mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
+
+        MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
+        map.getOverlays().add(0, mapEventsOverlay);
     }
 
 
@@ -177,16 +162,17 @@ public class MainActivity extends AppCompatActivity
                         dummy = ctx.read(read, BusStopData.class);
                         arrayOfDummys.add(dummy);
                     }
+
                     for(BusStopData data : arrayOfDummys){
                         System.out.println(data);
                     }
-                    myBusstopMarkers = new ArrayList<>();
 
                     for(BusStopData bSD : arrayOfDummys ){
                         String[] values = {bSD.name,bSD.longitude,bSD.latitude,bSD.id + ""};
                         MyBusstopMarker stop = new MyBusstopMarker(map, values,context, res);
                         map.getOverlayManager().add(stop);
                         myBusstopMarkers.add(stop);
+                        map.invalidate();
                     }
                 }
             });
