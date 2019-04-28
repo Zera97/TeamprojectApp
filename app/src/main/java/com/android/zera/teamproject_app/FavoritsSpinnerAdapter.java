@@ -1,6 +1,7 @@
 package com.android.zera.teamproject_app;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -106,7 +108,6 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
             holder.mTextView.setVisibility(View.VISIBLE);
             holder.mLoad.setText("X");
             holder.mLoad.setVisibility(View.VISIBLE);
-            holder.mPopup.setText("o");
             holder.mPopup.setVisibility(View.VISIBLE);
         }
 
@@ -226,6 +227,6 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
     private class ViewHolder {
         private TextView mTextView;
         private Button mLoad;
-        private Button mPopup;
+        private ImageButton mPopup;
     }
 }
