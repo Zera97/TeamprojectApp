@@ -1,7 +1,6 @@
 package com.android.zera.teamproject_app;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
