@@ -4,8 +4,8 @@ public class BusStopData {
 
     protected int id;
     protected String name;
-    protected String latitude; //lat
-    protected String longitude; //longi
+    protected String latitude;
+    protected String longitude;
 
     public BusStopData(String name, String latitude, String longitude,int id) {
         this.id = id;

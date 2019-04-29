@@ -1,7 +1,6 @@
 package com.android.zera.teamproject_app;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -14,6 +13,8 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -46,7 +47,11 @@ public class MyInfoWindow extends InfoWindow {
         MessageData msgObj = new MessageData("APP", 0, "3");
         int stopID = Integer.parseInt(params[3]);
         msgObj.setStopID(stopID);
-        //msgObj.settime();
+        Date currentTime = Calendar.getInstance().getTime();
+        msgObj.setMinute(currentTime.getMinutes());
+        msgObj.setHour(currentTime.getHours() + 2);
+        msgObj.setLongitude(Double.parseDouble(params[1]));
+        msgObj.setLatitude(Double.parseDouble(params[2]));
         String message = createJSON(msgObj);
         System.out.println(message);
         MiddleWareConnector task = new MiddleWareConnector(mainContext, new MiddleWareConnector.TaskListener() {

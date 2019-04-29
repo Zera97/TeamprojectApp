@@ -9,7 +9,8 @@ public class MessageData {
     private String code;
     private ArrayList<Integer> selection;
     private int stopID;
-    private int time;
+    private int hour;
+    private int minute;
     private double latitude;
     private double longitude;
 
@@ -59,14 +60,6 @@ public class MessageData {
         this.stopID = stopID;
     }
 
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
     public double getLatitude() {
         return latitude;
     }
@@ -81,5 +74,21 @@ public class MessageData {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
     }
 }
