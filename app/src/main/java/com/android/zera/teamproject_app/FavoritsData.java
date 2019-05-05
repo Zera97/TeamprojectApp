@@ -7,6 +7,7 @@ public class FavoritsData {
     private ArrayList<Integer> numbers;
     private boolean selected;
     private String title;
+    public FavoritsSpinnerAdapter.ViewHolder viewHolder;
 
     public String getTitle() {
         return this.title;

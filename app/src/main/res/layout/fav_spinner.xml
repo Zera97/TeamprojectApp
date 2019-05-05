@@ -21,7 +21,15 @@
             android:id="@+id/load"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <ImageButton
+        <Button
+            android:id="@+id/rename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <!--<ImageButton
             android:id="@+id/popup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +37,7 @@
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
             android:padding="5dp"
-            android:background="@null" />
+            android:background="@null" />-->
 
 
     </LinearLayout>
