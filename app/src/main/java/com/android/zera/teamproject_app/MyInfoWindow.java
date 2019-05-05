@@ -48,8 +48,7 @@ public class MyInfoWindow extends InfoWindow {
         int stopID = Integer.parseInt(params[3]);
         msgObj.setStopID(stopID);
         Date currentTime = Calendar.getInstance().getTime();
-        msgObj.setMinute(currentTime.getMinutes());
-        msgObj.setHour(currentTime.getHours() + 2);
+        msgObj.setTime((currentTime.getHours() + 2) * 60 + currentTime.getMinutes());
         msgObj.setLongitude(Double.parseDouble(params[1]));
         msgObj.setLatitude(Double.parseDouble(params[2]));
         String message = createJSON(msgObj);
