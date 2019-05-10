@@ -1,15 +1,18 @@
 package com.android.zera.teamproject_app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -34,8 +37,7 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
     }
 
     @Override
-    public View getDropDownView(int position, View convertView,
-                                ViewGroup parent) {
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
     }
 
@@ -44,8 +46,7 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         return getCustomView(position, convertView, parent);
     }
 
-    public View getCustomView(final int position, View convertView,
-                              ViewGroup parent) {
+    public View getCustomView(final int position, View convertView, ViewGroup parent) {
 
         final FavoritsSpinnerAdapter.ViewHolder holder;
         if (convertView == null) {
@@ -71,11 +72,8 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
             holder.mTextView.setText(listState.get(position).getTitle());
             holder.mTextView.setVisibility(View.VISIBLE);
             holder.mLoad.setVisibility(View.VISIBLE);
-            holder.mLoad.setText("L");
             holder.mRename.setVisibility(View.VISIBLE);
-            holder.mRename.setText("R");
             holder.mDelete.setVisibility(View.VISIBLE);
-            holder.mDelete.setText("D");
         }
         holder.setTag(position);
         this.getListState().get(position).viewHolder = holder;
@@ -100,8 +98,8 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    showDeleteDialog(v);
-        }
+                showDeleteDialog(v);
+            }
         });
         return convertView;
     }
@@ -146,41 +144,54 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
                 String s = edit.getText().toString();
                 getListState().get(position).setTitle(s);
                 myAdapter.notifyDataSetChanged();
+                FavoritsSpinnerAdapter.hideKeyboardFrom(mContext,edit);
             }
         });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE,"Dismiss",new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FavoritsSpinnerAdapter.hideKeyboardFrom(mContext,edit);
+            }
+        });
+        edit.setMaxLines(1);
+        edit.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) });
         edit.setText(this.getListState().get(position).getTitle());
         dialog.show();
     }
 
     public void showDeleteDialog(View v) {
-        View sender = getCustomView((int) v.getTag(), null, null);
+        final View sender = getCustomView((int) v.getTag(), null, null);
         this.lastSender = sender;
         //EditText e = sender.findViewById(R.id.edittext);
         //System.out.print("HALLO I BIMS: " + e.getText());
 
         final int position = (int) v.getTag();
 
-        final EditText edit = new EditText(this.mContext);
+        //final TextView edit = new TextView(this.mContext);
+        //edit.setText(this.getListState().get(position).getTitle());
         AlertDialog dialog = new AlertDialog.Builder(this.mContext).create();
-        dialog.setTitle("Wirklich löschen?");
-        dialog.setView(edit);
+        String name = this.getListState().get(position).getTitle();
+        dialog.setTitle(name + " wirklich löschen?");
+        //dialog.setView(edit);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Ja löschen", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 delete(position);
+                FavoritsSpinnerAdapter.hideKeyboardFrom(mContext,sender);
             }
         });
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Nein behalten", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {            }
+            public void onClick(DialogInterface dialog, int which) {
+                FavoritsSpinnerAdapter.hideKeyboardFrom(mContext,sender);
+            }
         });
-        edit.setText(this.getListState().get(position).getTitle());
         dialog.show();
     }
 
     private void delete(int position) {
         this.listState.remove(position);
-        for(int i = 0; i < this.getListState().size(); i++){
+        for (int i = 0; i < this.getListState().size(); i++) {
             FavoritsSpinnerAdapter.ViewHolder vh = this.getListState().get(i).viewHolder;
             vh.setTag(i);
         }
@@ -190,15 +201,20 @@ public class FavoritsSpinnerAdapter extends ArrayAdapter<FavoritsData> {
 
     public class ViewHolder {
         private TextView mTextView;
-        private Button mLoad;
-        private Button mRename;
-        private Button mDelete;
+        private ImageButton mLoad;
+        private ImageButton mRename;
+        private ImageButton mDelete;
 
-        public void setTag(int tag){
+        public void setTag(int tag) {
             this.mTextView.setTag(tag);
             this.mLoad.setTag(tag);
             this.mRename.setTag(tag);
             this.mDelete.setTag(tag);
         }
+    }
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

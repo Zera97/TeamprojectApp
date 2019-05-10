@@ -13,22 +13,37 @@
         >
         <TextView
             android:id="@+id/edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="210dp"
+            android:layout_height="100px"
             android:textAlignment="center"
-            android:textSize="17sp" />
-        <Button
+            android:textSize="21sp" />
+        <ImageButton
             android:id="@+id/load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
+            android:layout_width="85px"
+            android:layout_height="85px"
+            android:src="@drawable/star_load"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:background="@null"
+            android:layout_marginLeft="5px"/>
+        <ImageButton
             android:id="@+id/rename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
+            android:layout_width="85px"
+            android:layout_height="85px"
+            android:src="@drawable/star_edit"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:background="@null"
+            android:layout_marginLeft="5px"/>
+        <ImageButton
             android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="85px"
+            android:layout_height="85px"
+            android:src="@drawable/star_delete"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:background="@null"
+            android:layout_marginLeft="5px"/>
         <!--<ImageButton
             android:id="@+id/popup"
             android:layout_width="wrap_content"
