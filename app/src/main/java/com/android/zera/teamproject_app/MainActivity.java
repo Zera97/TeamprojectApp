@@ -55,7 +55,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapEventsReceiver {
+        implements MapEventsReceiver {
 
     private MapView map = null;
     private IMapController mapController = null;
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-       // this.startRepeatingTask();
+       //this.startRepeatingTask();
 
     }
 
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onFinished(String result) {
 
-                    //System.out.println(result);
+                    System.out.println(result);
 
                     ReadContext ctx = JsonPath.parse(result);
 
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(new NavigationListener(this));
     }
 
     @Override
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.impressum, menu);
+        //getMenuInflater().inflate(R.menu.impressum, menu);
         return true;
     }
 
@@ -273,42 +273,6 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.map) {
-            Intent activity_main = new Intent(this, MainActivity.class);
-            startActivity(activity_main);
-            finish();
-
-        } else if (id == R.id.fahrplan) {
-            Intent activity_fahrpläne = new Intent(this, FahrplanActivity.class);
-            startActivity(activity_fahrpläne);
-            finish();
-
-        } else if (id == R.id.punkt3) {
-
-        } else if (id == R.id.nav_contact) {
-            Intent contacts = new Intent(this, WebViewActivity.class);
-            contacts.putExtra("url","https://hvb-harz.de/kontakt/");
-            startActivity(contacts);
-            finish();
-
-        } else if (id == R.id.nav_impressum) {
-            Intent impressum = new Intent(this, WebViewActivity.class);
-            impressum.putExtra("url","https://hvb-harz.de/impressum/");
-            startActivity(impressum);
-            finish();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     //endregion
 
     //region Sliders
