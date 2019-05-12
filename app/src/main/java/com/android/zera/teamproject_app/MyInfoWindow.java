@@ -24,8 +24,9 @@ public class MyInfoWindow extends InfoWindow {
     private Context mainContext;
     private String[] params;
     private TextView txtSub;
+    private boolean stop;
 
-    public MyInfoWindow(int layoutResId, MapView mapView, Context mainActivity, String[] stringArray) {
+    public MyInfoWindow(int layoutResId, MapView mapView, Context mainActivity, String[] stringArray, boolean stop) {
         super(layoutResId, mapView);
         this.params = stringArray;
         this.mainContext = mainActivity;
@@ -39,7 +40,9 @@ public class MyInfoWindow extends InfoWindow {
         txtTitle.setText(params[0]);
 
         txtSub = (TextView) mView.findViewById(R.id.bubble_subtext);
-        setSubtext();
+        if(stop){
+            setSubtext();
+        }
     }
 
 

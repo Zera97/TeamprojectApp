@@ -24,10 +24,12 @@ public class MyBusMarker extends Marker{
     }
 
     private void setMarkerSettings() {
-        double lat = Double.parseDouble(sonstigeParameter[2]);
-        double longi = Double.parseDouble(sonstigeParameter[1]);
+        double longi = Double.parseDouble(sonstigeParameter[2]);
+        double lat = Double.parseDouble(sonstigeParameter[1]);
         GeoPoint position = new GeoPoint(lat,longi);
         this.setPosition(position);
         this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        MyInfoWindow infoWindow = new MyInfoWindow(R.layout.information_bubble, map, mainActivity,sonstigeParameter,false);
+        this.setInfoWindow(infoWindow);
     }
 }

@@ -30,7 +30,7 @@ public class MyBusstopMarker extends Marker{
             this.setPosition(position);
             this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             this.setIcon(mainActivity.getResources().getDrawable(R.drawable.cute_stop));
-            MyInfoWindow infoWindow = new MyInfoWindow(R.layout.information_bubble, map, mainActivity,sonstigeParameter);
+            MyInfoWindow infoWindow = new MyInfoWindow(R.layout.information_bubble, map, mainActivity,sonstigeParameter,true);
             this.setInfoWindow(infoWindow);
         }
 

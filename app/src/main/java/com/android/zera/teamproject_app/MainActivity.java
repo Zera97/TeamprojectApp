@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity
     private Handler busHandler;
     private Runnable mHandlerTask;
     private final int INTERVAL = 10000 ;
+    private MyBusMarker marker;
+    private ArrayList<MyBusMarker> busMarkers;
+    int counter;
 
 
     @Override
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
-
+        busMarkers = new ArrayList<>();
         myBusstopMarkers = new ArrayList<>();
 
         this.checkPermissions();
@@ -94,7 +97,6 @@ public class MainActivity extends AppCompatActivity
         };
 
        this.startRepeatingTask();
-
     }
 
 
@@ -117,6 +119,9 @@ public class MainActivity extends AppCompatActivity
 
         MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
         map.getOverlays().add(0, mapEventsOverlay);
+
+
+
     }
 
 
@@ -460,6 +465,12 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+        for(MyBusMarker myMarker : busMarkers){
+            if(myMarker.isInfoWindowShown() && p != myMarker.getPosition()){
+                InfoWindow.closeAllInfoWindowsOn(map);
+            }
+        }
+
         return true;
     }
 
@@ -486,16 +497,48 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void doSomething(){
-        MessageData msgObj = new MessageData("APP", 0, "2");
+       // MessageData msgObj = new MessageData("APP", 0, "2");
         //msgObj.setSelection();
-        String message = createJSON(msgObj);
-        MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
+        //String message = createJSON(msgObj);
+        /*MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
             @Override
             public void onFinished(String result) {
                 System.out.println(result);
             }
         });
 
-        task.execute(message);
+        task.execute(message); */
+        mockBus();
+    }
+
+    private void mockBus(){
+
+        System.out.println("HALLO" + counter);
+        map.getOverlayManager().remove(marker);
+        map.invalidate();
+        busMarkers.remove(marker);
+        switch(counter) {
+            case 0:
+                String[] yolo = {"TESTBUS", "51.826843", "10.760160"};
+                marker = new MyBusMarker(map, yolo ,this,res);
+                break;
+            case 1:
+                String[] yolo2 = {"TESTBUS", "51.826385", "10.758819"};
+                marker = new MyBusMarker(map, yolo2 ,this,res);
+                break;
+            case 2:
+                String[] yolo3 = {"TESTBUS", "51.826427", "10.756800"};
+                marker = new MyBusMarker(map, yolo3 ,this,res);
+                break;
+        }
+        busMarkers.add(marker);
+        if(counter == 2){
+            counter = 0;
+        }
+        else {
+            counter ++;
+        }
+        map.getOverlayManager().add(marker);
+        map.invalidate();
     }
 }
