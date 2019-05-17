@@ -4,6 +4,10 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
@@ -13,9 +17,11 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
+import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -30,6 +36,7 @@ public class MyInfoWindow extends InfoWindow {
         super(layoutResId, mapView);
         this.params = stringArray;
         this.mainContext = mainActivity;
+        this.stop = stop;
     }
 
     public void onClose() {
@@ -39,7 +46,6 @@ public class MyInfoWindow extends InfoWindow {
         TextView txtTitle = (TextView) mView.findViewById(R.id.bubble_title);
         txtTitle.setText(params[0]);
 
-        txtSub = (TextView) mView.findViewById(R.id.bubble_subtext);
         if(stop){
             setSubtext();
         }
@@ -83,8 +89,16 @@ public class MyInfoWindow extends InfoWindow {
                     }
 
                 });
+            /*
+                Object document = Configuration.defaultConfiguration().jsonProvider().parse(result);
 
-                txtSub.setText(result);
+                JsonArray author0 = JsonPath.read(document, "$.stoptimes[*].*");
+
+                Gson converter = new Gson();
+
+                Type type = new TypeToken<List<String>>(){}.getType();
+                List<String> list =  converter.fromJson(author0,type); */
+                //txtSub.setText(result);
                 }
             });
 

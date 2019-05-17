@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-       this.startRepeatingTask();
+       //this.startRepeatingTask();
     }
 
 
@@ -497,18 +497,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void doSomething(){
-       // MessageData msgObj = new MessageData("APP", 0, "2");
+        MessageData msgObj = new MessageData("APP", 0, "2");
         //msgObj.setSelection();
-        //String message = createJSON(msgObj);
-        /*MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
+        String message = createJSON(msgObj);
+        MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
             @Override
             public void onFinished(String result) {
                 System.out.println(result);
             }
         });
 
-        task.execute(message); */
-        mockBus();
+        task.execute(message);
+        //mockBus();
     }
 
     private void mockBus(){
