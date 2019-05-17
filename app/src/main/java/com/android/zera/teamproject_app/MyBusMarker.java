@@ -32,7 +32,7 @@ public class MyBusMarker extends Marker{
         GeoPoint position = new GeoPoint(lat,longi);
         this.setPosition(position);
         this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        //MyInfoWindow infoWindow = new MyInfoWindow(R.layout.information_bubble, map, mainActivity,sonstigeParameter,false);
-        //this.setInfoWindow(infoWindow);
+       // MyInfoWindow infoWindow = new MyInfoWindow(R.layout.information_bubble, map, mainActivity,sonstigeParameter,false);
+      //  this.setInfoWindow(infoWindow);
     }
 }

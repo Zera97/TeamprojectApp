@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity
 
                     for(BusStopData bSD : arrayOfDummys ){
                         String[] values = {bSD.name,bSD.longitude,bSD.latitude,bSD.id + ""};
-                        MyBusstopMarker stop = new MyBusstopMarker(activity,map, values,context, res);
+                        MyBusstopMarker stop = new MyBusstopMarker(map, values,context, res);
                         map.getOverlayManager().add(stop);
                         myBusstopMarkers.add(stop);
                         map.invalidate();

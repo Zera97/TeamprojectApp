@@ -2,6 +2,7 @@ package com.android.zera.teamproject_app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -35,15 +36,13 @@ public class MyInfoWindow extends InfoWindow {
     private String[] params;
     private TextView txtSub;
     private int layoutResId;
-    private Activity activity;
     private boolean stop;
 
-    public MyInfoWindow(int layoutResId, MapView mapView,Activity activity,Context mainActivity, String[] stringArray, boolean stop) {
-        super(layoutResId, mapView);
+    public MyInfoWindow(View view , int layoutResId, MapView mapView, Context mainActivity, String[] stringArray, boolean stop) {
+        super(view, mapView);
         this.params = stringArray;
         this.layoutResId = layoutResId;
         this.mainContext = mainActivity;
-        this.activity = activity;
         this.stop = stop;
     }
 
@@ -51,7 +50,10 @@ public class MyInfoWindow extends InfoWindow {
     }
 
     public void onOpen(final Object arg0) {
-        TextView txtTitle = (TextView) mView.findViewById(R.id.bubble_title);
+        //TextView txtTitle = (TextView) mView.findViewById(R.id.bubble_title);
+        //txtTitle.setText(params[0]);
+
+        TextView txtTitle = (TextView) mView.findViewWithTag("TEST");
         txtTitle.setText(params[0]);
 
         if(stop){
@@ -59,19 +61,6 @@ public class MyInfoWindow extends InfoWindow {
             //createLayout();
         }
     }
-/*
-    private void createLayout(){
-        activity.setContentView(layoutResId);
-        TableLayout layout = activity.findViewById(layoutResId);
-        TableRow row = new TableRow(mainContext);
-        TextView txtView = new TextView(mainContext);
-        TableLayout.LayoutParams p = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
-        txtView.setLayoutParams(p);
-        txtView.setText("HALLO");
-        row.addView(txtView);
-        layout.addView(row);
-    }
-*/
 
     private void setSubtext() {
         MessageData msgObj = new MessageData("APP", 0, "3");
