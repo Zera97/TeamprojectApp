@@ -53,7 +53,7 @@ public class MyInfoWindow extends InfoWindow {
         //TextView txtTitle = (TextView) mView.findViewById(R.id.bubble_title);
         //txtTitle.setText(params[0]);
 
-        TextView txtTitle = (TextView) mView.findViewWithTag("TEST");
+        TextView txtTitle = (TextView) mView.findViewWithTag("header");
         txtTitle.setText(params[0]);
 
         if(stop){
