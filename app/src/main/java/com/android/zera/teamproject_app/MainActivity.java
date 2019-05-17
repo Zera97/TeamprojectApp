@@ -1,6 +1,7 @@
 package com.android.zera.teamproject_app;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     private final int INTERVAL = 10000 ;
     private MyBusMarker marker;
     private ArrayList<MyBusMarker> busMarkers;
+    Activity activity;
     int counter;
 
 
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity
                 busHandler.postDelayed(mHandlerTask, INTERVAL);
             }
         };
-
+        activity = this;
        //this.startRepeatingTask();
     }
 
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity
 
                     for(BusStopData bSD : arrayOfDummys ){
                         String[] values = {bSD.name,bSD.longitude,bSD.latitude,bSD.id + ""};
-                        MyBusstopMarker stop = new MyBusstopMarker(map, values,context, res);
+                        MyBusstopMarker stop = new MyBusstopMarker(activity,map, values,context, res);
                         map.getOverlayManager().add(stop);
                         myBusstopMarkers.add(stop);
                         map.invalidate();
