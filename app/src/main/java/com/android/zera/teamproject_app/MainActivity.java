@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Spinner;
-import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -46,9 +45,16 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Scanner;
@@ -68,9 +74,9 @@ public class MainActivity extends AppCompatActivity
     private final int INTERVAL = 10000 ;
     private MyBusMarker marker;
     private ArrayList<MyBusMarker> busMarkers;
-    Activity activity;
-    int counter;
-
+    private int counter;
+    private ArrayList<String> lati;
+    private ArrayList<String> longi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +104,40 @@ public class MainActivity extends AppCompatActivity
                 busHandler.postDelayed(mHandlerTask, INTERVAL);
             }
         };
-        activity = this;
-       //this.startRepeatingTask();
+
+        longi = new ArrayList<>();
+        lati = new ArrayList<>();
+
+        InputStream inputStream = getResources().openRawResource(R.raw.newdata);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = null;
+
+        try {
+            line = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int position = 1;
+        while (line != null)
+        {
+            //System.out.println(line);
+            if(position == 1){
+                lati.add(line);
+                position++;
+            }
+            else {
+                longi.add(line);
+                position = 1;
+            }
+            try {
+                line = reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        this.startRepeatingTask();
     }
 
 
@@ -500,6 +538,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void doSomething(){
+        /*
         MessageData msgObj = new MessageData("APP", 0, "2");
         //msgObj.setSelection();
         String message = createJSON(msgObj);
@@ -511,31 +550,22 @@ public class MainActivity extends AppCompatActivity
         });
 
         task.execute(message);
-        //mockBus();
+        */
+        mockBus();
     }
 
     private void mockBus(){
 
-        System.out.println("HALLO" + counter);
         map.getOverlayManager().remove(marker);
         map.invalidate();
         busMarkers.remove(marker);
-        switch(counter) {
-            case 0:
-                String[] yolo = {"TESTBUS", "51.826843", "10.760160"};
-                marker = new MyBusMarker(map, yolo ,this,res);
-                break;
-            case 1:
-                String[] yolo2 = {"TESTBUS", "51.826385", "10.758819"};
-                marker = new MyBusMarker(map, yolo2 ,this,res);
-                break;
-            case 2:
-                String[] yolo3 = {"TESTBUS", "51.826427", "10.756800"};
-                marker = new MyBusMarker(map, yolo3 ,this,res);
-                break;
-        }
+        String[] yolo = {"204", lati.get(counter), longi.get(counter)};
+        marker = new MyBusMarker(map, yolo ,this,res);
         busMarkers.add(marker);
-        if(counter == 2){
+
+        System.out.println(lati.get(counter) + " " + longi.get(counter));
+
+        if(counter >= lati.size()){
             counter = 0;
         }
         else {

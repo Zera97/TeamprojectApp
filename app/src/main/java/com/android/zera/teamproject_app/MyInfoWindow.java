@@ -34,14 +34,13 @@ public class MyInfoWindow extends InfoWindow {
 
     private Context mainContext;
     private String[] params;
-    private TextView txtSub;
-    private int layoutResId;
+    //private int layoutResId;
     private boolean stop;
 
-    public MyInfoWindow(View view , int layoutResId, MapView mapView, Context mainActivity, String[] stringArray, boolean stop) {
+    public MyInfoWindow(View view ,  MapView mapView, Context mainActivity, String[] stringArray, boolean stop) {
         super(view, mapView);
         this.params = stringArray;
-        this.layoutResId = layoutResId;
+        //this.layoutResId = layoutResId;
         this.mainContext = mainActivity;
         this.stop = stop;
     }
@@ -58,7 +57,6 @@ public class MyInfoWindow extends InfoWindow {
 
         if(stop){
             setSubtext();
-            //createLayout();
         }
     }
 
