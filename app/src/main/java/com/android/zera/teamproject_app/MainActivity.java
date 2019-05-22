@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity
                 busHandler.postDelayed(mHandlerTask, INTERVAL);
             }
         };
-
+        /*
         longi = new ArrayList<>();
         lati = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-
+        */
         this.startRepeatingTask();
     }
 
@@ -538,7 +538,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void doSomething(){
-        /*
+
         MessageData msgObj = new MessageData("APP", 0, "2");
         //msgObj.setSelection();
         String message = createJSON(msgObj);
@@ -550,8 +550,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         task.execute(message);
-        */
-        mockBus();
+
+        //mockBus();
     }
 
     private void mockBus(){
