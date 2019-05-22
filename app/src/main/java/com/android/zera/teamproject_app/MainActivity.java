@@ -137,7 +137,9 @@ public class MainActivity extends AppCompatActivity
             }
         }
         */
-        this.startRepeatingTask();
+
+
+        //this.startRepeatingTask();
     }
 
 

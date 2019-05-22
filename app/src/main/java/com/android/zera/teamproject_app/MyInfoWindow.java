@@ -2,6 +2,7 @@ package com.android.zera.teamproject_app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.icu.util.TimeZone;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
@@ -34,13 +35,11 @@ public class MyInfoWindow extends InfoWindow {
 
     private Context mainContext;
     private String[] params;
-    //private int layoutResId;
     private boolean stop;
 
     public MyInfoWindow(View view ,  MapView mapView, Context mainActivity, String[] stringArray, boolean stop) {
         super(view, mapView);
         this.params = stringArray;
-        //this.layoutResId = layoutResId;
         this.mainContext = mainActivity;
         this.stop = stop;
     }
@@ -49,8 +48,6 @@ public class MyInfoWindow extends InfoWindow {
     }
 
     public void onOpen(final Object arg0) {
-        //TextView txtTitle = (TextView) mView.findViewById(R.id.bubble_title);
-        //txtTitle.setText(params[0]);
 
         TextView txtTitle = (TextView) mView.findViewWithTag("header");
         txtTitle.setText(params[0]);
@@ -97,7 +94,7 @@ public class MyInfoWindow extends InfoWindow {
                     }
 
                 });
-            /*
+
                 Object document = Configuration.defaultConfiguration().jsonProvider().parse(result);
 
                 JsonArray author0 = JsonPath.read(document, "$.stoptimes[*].*");
@@ -105,8 +102,10 @@ public class MyInfoWindow extends InfoWindow {
                 Gson converter = new Gson();
 
                 Type type = new TypeToken<List<String>>(){}.getType();
-                List<String> list =  converter.fromJson(author0,type); */
-                //txtSub.setText(result);
+
+                List<String> list =  converter.fromJson(author0,type);
+                //Wenn Liste leer fahren derzeit keine Busse
+
                 }
             });
 
