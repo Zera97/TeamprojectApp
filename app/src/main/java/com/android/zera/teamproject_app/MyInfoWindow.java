@@ -24,6 +24,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
@@ -36,12 +37,14 @@ public class MyInfoWindow extends InfoWindow {
     private Context mainContext;
     private String[] params;
     private boolean stop;
+    private ArrayList<BusStopData> myBusstopMarkers;;
 
-    public MyInfoWindow(View view ,  MapView mapView, Context mainActivity, String[] stringArray, boolean stop) {
+    public MyInfoWindow(View view, MapView mapView, ArrayList<BusStopData> myBusstopMarkers,Context mainActivity, String[] stringArray, boolean stop) {
         super(view, mapView);
         this.params = stringArray;
         this.mainContext = mainActivity;
         this.stop = stop;
+        this.myBusstopMarkers = myBusstopMarkers;
     }
 
     public void onClose() {
@@ -52,7 +55,7 @@ public class MyInfoWindow extends InfoWindow {
         TextView txtTitle = (TextView) mView.findViewWithTag("header");
         txtTitle.setText(params[0]);
 
-        if(stop){
+        if (stop) {
             setSubtext();
         }
     }
@@ -97,19 +100,80 @@ public class MyInfoWindow extends InfoWindow {
 
                 Object document = Configuration.defaultConfiguration().jsonProvider().parse(result);
 
-                JsonArray author0 = JsonPath.read(document, "$.stoptimes[*].*");
+                JsonArray lines = JsonPath.read(document, "$.stoptimes[*].line");
+
+                JsonArray stops = JsonPath.read(document, "$.stoptimes[*].nextstop");
+
+                JsonArray times = JsonPath.read(document, "$.stoptimes[*].time");
+
+                JsonArray direction = JsonPath.read(document, "$.stoptimes[*].direction");
 
                 Gson converter = new Gson();
 
-                Type type = new TypeToken<List<String>>(){}.getType();
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
 
-                List<String> list =  converter.fromJson(author0,type);
-                //Wenn Liste leer fahren derzeit keine Busse
+                List<String> list_lines = converter.fromJson(lines, type);
 
+                List<String> list_nextStop = converter.fromJson(stops, type);
+
+                List<String> list_times = converter.fromJson(times, type);
+
+                List<String> list_directions = converter.fromJson(direction, type);
+
+
+                if (list_lines.isEmpty()) {
+                    deletePlatzhalter(0);
+                } else {
+                    int anzahl = 0;
+                    while (anzahl < list_lines.size()) {
+                        TextView txtLine = (TextView) mView.findViewWithTag("linie" + anzahl);
+                        TextView txtZeit = (TextView) mView.findViewWithTag("zeit" + anzahl);
+
+                        String textLine = list_lines.get(anzahl) + " -> ";
+
+                        for (BusStopData data: myBusstopMarkers) {
+                            if(data.id == Integer.parseInt(list_nextStop.get(anzahl))){
+                                textLine += data.name;
+                            }
+                        }
+
+                        txtLine.setText(textLine);
+
+                        int temp  = Integer.valueOf(list_times.get(anzahl));
+
+                        String textTime = (temp / 60) + ":" + (temp%60);
+
+                        txtZeit.setText(textTime);
+
+                        anzahl++;
+                    }
+                    deletePlatzhalter(anzahl);
                 }
-            });
+            }
+        });
 
         task.execute(message);
+    }
+
+    private void deletePlatzhalter(int untereGrenze){
+
+        if(untereGrenze == 0){
+            TextView txtLine = (TextView) mView.findViewWithTag("linie" + 0);
+            TextView txtZeit = (TextView) mView.findViewWithTag("zeit" + 0);
+
+            txtLine.setText("In nächster Zeit fährt von dieser Haltestelle kein Bus ab.");
+            txtZeit.setText("");
+            untereGrenze++;
+        }
+
+        for(int i = untereGrenze;i<5;i++){
+            TextView txtLine = (TextView) mView.findViewWithTag("linie" + i);
+            TextView txtZeit = (TextView) mView.findViewWithTag("zeit" + i);
+
+            txtLine.setText("");
+            txtZeit.setText("");
+        }
     }
 
     private String createJSON(Object dataObj) {

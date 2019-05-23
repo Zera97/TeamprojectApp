@@ -1,7 +1,6 @@
 package com.android.zera.teamproject_app;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -45,16 +44,9 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Scanner;
@@ -77,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private int counter;
     private ArrayList<String> lati;
     private ArrayList<String> longi;
+    private ArrayList<BusStopData> arrayOfBusstopDatas;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +145,6 @@ public class MainActivity extends AppCompatActivity
         mapController = map.getController();
         mapController.setZoom(18.0);
         GeoPoint startPoint = new GeoPoint(51.826918, 10.760942);
-        //GeoPoint startPoint = new GeoPoint(51.84, 10.78);
         mapController.setCenter(startPoint);
 
         this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
@@ -201,22 +193,23 @@ public class MainActivity extends AppCompatActivity
                     JsonArray busStopData = ctx.read("$.busstops[*]");
 
                     BusStopData dummy;
-                    ArrayList<BusStopData> arrayOfDummys = new ArrayList<>();
+                    arrayOfBusstopDatas = new ArrayList<>();
+
                     int size = busStopData.size();
 
                     for(int i = 0;i <size;i++){
                         String read = "$.busstops[" + i + "]";
                         dummy = ctx.read(read, BusStopData.class);
-                        arrayOfDummys.add(dummy);
+                        arrayOfBusstopDatas.add(dummy);
                     }
 
-                    for(BusStopData data : arrayOfDummys){
+                    for(BusStopData data : arrayOfBusstopDatas){
                         System.out.println(data);
                     }
 
-                    for(BusStopData bSD : arrayOfDummys ){
+                    for(BusStopData bSD : arrayOfBusstopDatas){
                         String[] values = {bSD.name,bSD.longitude,bSD.latitude,bSD.id + ""};
-                        MyBusstopMarker stop = new MyBusstopMarker(map, values,context, res);
+                        MyBusstopMarker stop = new MyBusstopMarker(map,arrayOfBusstopDatas,values,context, res);
                         map.getOverlayManager().add(stop);
                         myBusstopMarkers.add(stop);
                         map.invalidate();

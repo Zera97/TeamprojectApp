@@ -38,7 +38,7 @@ public class MyBusMarker extends Marker{
         GeoPoint position = new GeoPoint(lat,longi);
         this.setPosition(position);
         this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        MyInfoWindow infoWindow = new MyInfoWindow(createLayout(), map, mainActivity,sonstigeParameter,false);
+        MyInfoWindow infoWindow = new MyInfoWindow(createLayout(), map,null, mainActivity,sonstigeParameter,false);
         this.setInfoWindow(infoWindow);
     }
 
