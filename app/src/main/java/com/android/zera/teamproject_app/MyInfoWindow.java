@@ -1,12 +1,7 @@
 package com.android.zera.teamproject_app;
 
-import android.app.Activity;
 import android.content.Context;
-import android.icu.util.TimeZone;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
