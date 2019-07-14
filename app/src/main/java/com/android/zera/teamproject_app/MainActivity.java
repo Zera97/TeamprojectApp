@@ -66,10 +66,7 @@ public class MainActivity extends AppCompatActivity
     private final int INTERVAL = 10000 ;
     private MyBusMarker marker;
     private ArrayList<MyBusMarker> busMarkers;
-    private int counter;
-    private ArrayList<String> lati;
-    private ArrayList<String> longi;
-    private ArrayList<BusStopData> arrayOfBusstopDatas;;
+    private ArrayList<BusStopData> arrayOfBusstopDatas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,42 +94,7 @@ public class MainActivity extends AppCompatActivity
                 busHandler.postDelayed(mHandlerTask, INTERVAL);
             }
         };
-        /*
-        longi = new ArrayList<>();
-        lati = new ArrayList<>();
-
-        InputStream inputStream = getResources().openRawResource(R.raw.newdata);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = null;
-
-        try {
-            line = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int position = 1;
-        while (line != null)
-        {
-            //System.out.println(line);
-            if(position == 1){
-                lati.add(line);
-                position++;
-            }
-            else {
-                longi.add(line);
-                position = 1;
-            }
-            try {
-                line = reader.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        */
-
-
-        //this.startRepeatingTask();
+                this.startRepeatingTask();
     }
 
 
@@ -546,27 +508,5 @@ public class MainActivity extends AppCompatActivity
 
         task.execute(message);
 
-        //mockBus();
-    }
-
-    private void mockBus(){
-
-        map.getOverlayManager().remove(marker);
-        map.invalidate();
-        busMarkers.remove(marker);
-        String[] yolo = {"204", lati.get(counter), longi.get(counter)};
-        marker = new MyBusMarker(map, yolo ,this,res);
-        busMarkers.add(marker);
-
-        System.out.println(lati.get(counter) + " " + longi.get(counter));
-
-        if(counter >= lati.size()){
-            counter = 0;
-        }
-        else {
-            counter ++;
-        }
-        map.getOverlayManager().add(marker);
-        map.invalidate();
     }
 }
