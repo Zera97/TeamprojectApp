@@ -10,10 +10,6 @@
         <item
             android:id="@+id/fahrplan"
             android:title="Fahrpläne" />
-        <item
-            android:id="@+id/punkt3"
-            android:title="Punkt3" />
-
     </group>
 
 

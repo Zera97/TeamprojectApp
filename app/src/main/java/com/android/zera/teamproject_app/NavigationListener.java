@@ -27,9 +27,7 @@ public class NavigationListener
             Intent activity_fahrpläne = new Intent(context, FahrplanActivity.class);
             context.startActivity(activity_fahrpläne);
 
-        } else if (id == R.id.punkt3) {
-
-        } else if (id == R.id.nav_contact) {
+        }  else if (id == R.id.nav_contact) {
             Intent contacts = new Intent(context, WebViewActivity.class);
             contacts.putExtra("url","https://hvb-harz.de/kontakt/");
             context.startActivity(contacts);

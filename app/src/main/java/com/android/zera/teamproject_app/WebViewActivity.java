@@ -49,7 +49,7 @@ public class WebViewActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(new NavigationListener(this));
     }
 
     @Override
@@ -88,29 +88,6 @@ public class WebViewActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.map) {
-            Intent activity_main = new Intent(this, MainActivity.class);
-            startActivity(activity_main);
-            finish();
-
-        } else if (id == R.id.fahrplan) {
-            Intent activity_fahrpläne = new Intent(this, FahrplanActivity.class);
-            startActivity(activity_fahrpläne);
-            finish();
-
-        } else if (id == R.id.punkt3) {
-
-        } else if (id == R.id.nav_contact) {
-
-        } else if (id == R.id.nav_impressum) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
