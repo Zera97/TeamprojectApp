@@ -15,9 +15,24 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+/**
+ * Regelt Kommunikation zur Middleware.
+ * @author Fabian Theuerkauf
+ * @version 1.0
+ */
+
 public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
 
+    /**
+     * Synchronisiert die Datenbasis der App mit der der Middleware.
+     * @author Fabian Theuerkauf
+     * @version 1.0
+     */
     public interface TaskListener {
+        /**
+         * Regelt den Umgang mit den Daten, die von der Middleware empfangen werden.
+         * @param result Daten von Middleware
+         */
         void onFinished(String result);
     }
 
@@ -29,7 +44,11 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         this.taskListener = listener;
     }
 
-
+    /**
+     * Übergibt Nachricht an die sende Methode.
+     * @param strings Nachricht für die Middleware
+     * @return Daten von Middleware
+     */
     @Override
     protected String doInBackground(String... strings) {
 
@@ -37,6 +56,11 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         return response;
     }
 
+    /**
+     * Baut Verbindung zur Middleware auf und sendet bzw. empfängt jeweilige Nachrichten.
+     * @param msg Nachricht für die Middleware
+     * @return Daten von Middleware
+     */
     private String sendMessage(String msg){
         String ip  ="";
         InetAddress inet = null;
@@ -124,6 +148,10 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         return fromServer;
     }
 
+    /**
+     * Übergibt die Ergebnisse des Connectors an die aufrufende Klasse.
+     * @param result Daten von Middleware
+     */
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
@@ -132,10 +160,17 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         }
     }
 
+    /**
+     * Nicht genutzt.
+     */
     @Override
     protected void onPreExecute() {
     }
 
+    /**
+     * Nicht genutzt.
+     * @param values
+     */
     @Override
     protected void onProgressUpdate(Integer... values) {
     }

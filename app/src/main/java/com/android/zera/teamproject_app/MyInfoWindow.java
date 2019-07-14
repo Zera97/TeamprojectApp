@@ -26,6 +26,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Klasse zum Anzeigen von dynamischen Informationen der Bushaltestellen.
+ * @author Fabian Theuerkauf
+ * @version 1.0
+ */
 
 public class MyInfoWindow extends InfoWindow {
 
@@ -42,11 +47,17 @@ public class MyInfoWindow extends InfoWindow {
         this.myBusstopMarkers = myBusstopMarkers;
     }
 
+    /**
+     * Regelt das Verhalten beim Schließen des InfoWindows.
+     */
     public void onClose() {
     }
 
+    /**
+     * Regelt das Verhalten beim Öffnen des InfoWindows. Setzt den Titel des InfowWindow
+     * @param arg0 das geöffnete InfoWindow
+     */
     public void onOpen(final Object arg0) {
-
         TextView txtTitle = (TextView) mView.findViewWithTag("header");
         txtTitle.setText(params[0]);
 
@@ -55,6 +66,9 @@ public class MyInfoWindow extends InfoWindow {
         }
     }
 
+    /**
+     * Aufbereiten und Darstellen der Informationen zu den Buslinien.
+     */
     private void setSubtext() {
         MessageData msgObj = new MessageData("APP", 0, "3");
         int stopID = Integer.parseInt(params[3]);
@@ -151,6 +165,10 @@ public class MyInfoWindow extends InfoWindow {
         task.execute(message);
     }
 
+    /**
+     * Löscht alle nicht gefüllten Buslinientabs aus dem InfoWindow der Bushaltestelle.
+     * @param untereGrenze Erster Index der gelöschten Platzhalter
+     */
     private void deletePlatzhalter(int untereGrenze){
 
         if(untereGrenze == 0){
@@ -171,6 +189,11 @@ public class MyInfoWindow extends InfoWindow {
         }
     }
 
+    /**
+     * Generiert aus einem Objekt die JSON Darstellung.
+     * @param dataObj Objekt was in JSON überführt werden soll
+     * @return JSON String des Objektes
+     */
     private String createJSON(Object dataObj) {
         Gson gson = new Gson();
         String data = gson.toJson(dataObj);
