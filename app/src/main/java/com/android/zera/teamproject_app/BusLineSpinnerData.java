@@ -1,5 +1,11 @@
 package com.android.zera.teamproject_app;
 
+/**
+ * Containerklasse der Buslinien, zur Darstellung im Buslinien-DropDown.
+ * @author Dirk Neumann
+ * @version 1.0
+ */
+
 public class BusLineSpinnerData {
 
     private int number;

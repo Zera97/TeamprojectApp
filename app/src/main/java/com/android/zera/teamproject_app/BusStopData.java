@@ -1,11 +1,11 @@
 package com.android.zera.teamproject_app;
 
 /**
- *
  * Containerklasse für die Datenkapselung aller Parameter zur Beschreibung einer Bushaltestelle.
  * @author Fabian Theuerkauf
  * @version 1.0
  */
+
 public class BusStopData {
 
     protected int id;

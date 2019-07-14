@@ -2,6 +2,12 @@ package com.android.zera.teamproject_app;
 
 import java.util.ArrayList;
 
+/**
+ * Containerklasse der Favoriten, zur Darstellung im Favoriten-DropDown.
+ * @author Dirk Neumann
+ * @version 1.0
+ */
+
 public class FavoritsData {
 
     private ArrayList<Integer> numbers;
