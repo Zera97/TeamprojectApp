@@ -15,23 +15,49 @@ public class FavoritsData {
     private String title;
     public FavoritsSpinnerAdapter.ViewHolder viewHolder;
 
+    public FavoritsData(ArrayList<Integer> numbers){
+        this.setNumbers(numbers);
+        //this.selected = selected;
+    }
+
+    /**
+     * Liefert den Titel des Favoriten Tabs.
+     * @return Titel der Favoriten Auswahl
+     */
     public String getTitle() {
         return this.title;
     }
 
-    public void setTitle(String t){
-        this.title = t;
+    /**
+     * Setzt den Titel des Favoriten Tabs.
+     * @param title Neuer Titel
+     */
+    public void setTitle(String title){
+        this.title = title;
     }
 
+    /**
+     * Liefert den Wahrheitswert, ob Buslinie ausgewählt wurde.
+     * @return true wenn ausgewählt, false sonst
+     */
     public boolean isSelected() {
         return selected;
     }
 
+    /**
+     * Setzt den Wahrheitswert, ob Buslinie ausgewählt wurde.
+     * @param selected Wahrheitswert, ob Buslinie ausgewählt oder nicht.
+     */
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
 
-    public void  setNumbers(ArrayList<Integer> numbers){
+    /**
+     * Wandelt eine Liste von Zahlen in einen String mit gleicher Bedeutung um und setzt den String
+     * als neuen Titel des Favoriten Tabs.
+     * @param numbers Liste von Zahlen
+     */
+    public void setNumbers(ArrayList<Integer> numbers){
         this.numbers = numbers;
         if(numbers == null){
             this.title= "Meine Favoriten";
@@ -48,12 +74,12 @@ public class FavoritsData {
         }
     }
 
+    /**
+     * Liefert eine Liste aller Nummern im Favoriten Tab.
+     * @return Liste aller Nummern
+     */
     public ArrayList<Integer> getNumbers(){
         return this.numbers;
     }
 
-    public FavoritsData(ArrayList<Integer> numbers){
-        this.setNumbers(numbers);
-        //this.selected = selected;
-    }
 }
