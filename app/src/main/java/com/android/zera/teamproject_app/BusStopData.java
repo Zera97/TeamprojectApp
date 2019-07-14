@@ -1,5 +1,11 @@
 package com.android.zera.teamproject_app;
 
+/**
+ *
+ * Containerklasse für die Datenkapselung aller Parameter zur Beschreibung einer Bushaltestelle.
+ * @author Fabian Theuerkauf
+ * @version 1.0
+ */
 public class BusStopData {
 
     protected int id;
@@ -14,6 +20,10 @@ public class BusStopData {
         this.longitude = longitude;
     }
 
+    /**
+     * Liefert die Stringdarstellung des Objektes der Klasse BusStopData.
+     * @return String bestehend aus allen Attributen.
+     */
     @Override
     public String toString() {
         return "BusStopData{" +
