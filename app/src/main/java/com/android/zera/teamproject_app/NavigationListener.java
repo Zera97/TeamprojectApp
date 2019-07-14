@@ -5,6 +5,12 @@ import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.view.MenuItem;
 
+/**
+ * Listener zur Steuerung der Navigationsbar.
+ * @author Fabian Theuerkauf
+ * @version 1.0
+ */
+
 public class NavigationListener
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -14,6 +20,11 @@ public class NavigationListener
         this.context = mContext;
     }
 
+    /**
+     * Öffnet, in Abhängigkeit des ausgewählten Menu-Items, die jeweilige neue Activity.
+     * @param item Das ausgewählte Menu-Item
+     * @return true
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 

@@ -15,6 +15,12 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
+/**
+ * Überführt die Daten des Busses in eine grafisch dargestellten Form eine Markers für OSM-Android.
+ * @author Fabian Theuerkauf
+ * @version 1.0
+ */
+
 public class MyBusMarker extends Marker{
 
     private String[] sonstigeParameter;
@@ -31,6 +37,10 @@ public class MyBusMarker extends Marker{
         setMarkerSettings();
     }
 
+    /**
+     * Gibt dem Marker die gewünschten grafischen und logischen Eigenschaften. Setzt außerdem das
+     * individuelle InfoWindow des Markers.
+     */
     private void setMarkerSettings() {
         double longi = Double.parseDouble(sonstigeParameter[2]);
         double lat = Double.parseDouble(sonstigeParameter[1]);
@@ -41,6 +51,10 @@ public class MyBusMarker extends Marker{
         this.setInfoWindow(infoWindow);
     }
 
+    /**
+     * Generiert ein Dynamisches Layout für das InfoWindows des Bus Markers.
+     * @return dynamisches Layout
+     */
     private View createLayout(){
 
         LinearLayout layout = new LinearLayout(mainActivity);

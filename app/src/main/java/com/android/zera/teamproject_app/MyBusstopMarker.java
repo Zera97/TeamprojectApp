@@ -18,6 +18,12 @@ import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
 
+/**
+ * Überführt die Daten der Bushaltestelle in eine grafisch dargestellten Form eine Markers für OSM-Android.
+ * @author Fabian Theuerkauf
+ * @version 1.0
+ */
+
 public class MyBusstopMarker extends Marker {
 
     private String[] sonstigeParameter;
@@ -36,6 +42,10 @@ public class MyBusstopMarker extends Marker {
         setMarkerSettings();
     }
 
+    /**
+     * Gibt dem Marker die gewünschten grafischen und logischen Eigenschaften. Setzt außerdem das
+     * individuelle InfoWindow des Markers.
+     */
     private void setMarkerSettings() {
         double lat = Double.parseDouble(sonstigeParameter[2]);
         double longi = Double.parseDouble(sonstigeParameter[1]);
@@ -47,6 +57,10 @@ public class MyBusstopMarker extends Marker {
         this.setInfoWindow(infoWindow);
     }
 
+    /**
+     * Generiert ein Dynamisches Layout für das InfoWindows des Bushaltenstellen Markers.
+     * @return dynamisches Layout
+     */
     private View createLayout() {
 
         LinearLayout outerLayout = new LinearLayout(mainActivity);
