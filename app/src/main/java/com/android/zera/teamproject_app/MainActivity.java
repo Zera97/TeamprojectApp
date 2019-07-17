@@ -278,6 +278,20 @@ public class MainActivity extends AppCompatActivity
 
     //region Sliders
     private void initBusLineSlider() {
+
+    /*
+        Spinner buslineSpinner = findViewById(R.id.BusLineSpinner);
+        BusLineSpinnerAdapter myAdapter = (BusLineSpinnerAdapter)favoritSpinner.getAdapter();
+        ArrayList<BusLineSpinnerData> selection = myAdapter.getListState();
+        ArrayList<Integer> final_selection = new ArrayList<Integer>();
+        for (int i = 0; i < selection.length; i++) {
+            BusLineSpinnerData busLineDate = selection.get(i);
+            if(busLineDate.isSelected()){
+                final_selection.Add(new Integer(busLineDate.getNumber()));
+            }
+        }
+     */
+
         final int[] select_qualification = this.getAllBusLines();
         Spinner spinner = findViewById(R.id.BusLineSpinner);
         ArrayList<BusLineSpinnerData> listVOs = new ArrayList<>();
@@ -327,6 +341,7 @@ public class MainActivity extends AppCompatActivity
         }
         catch (Exception e){}
     }
+
 
 
 
