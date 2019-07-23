@@ -73,7 +73,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
         ip = inet.getHostAddress();
         int port = 31896;
         Socket socket = null;
-        System.out.println("Socket erzeug122t.");
+        System.out.println("Socket erzeugt.");
         try {
             socket = new Socket(ip,port);
         } catch (UnknownHostException e) {
@@ -84,7 +84,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             return null;
         }
         try {
-            socket.setSoTimeout(8000);
+            socket.setSoTimeout(3000);
         } catch (SocketException e) {
             e.printStackTrace();
         }

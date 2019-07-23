@@ -512,7 +512,7 @@ public class MainActivity extends AppCompatActivity
     private void doSomething(){
 
         MessageData msgObj = new MessageData("APP", 0, "2");
-        //msgObj.setSelection();
+        msgObj.setSelection(createSelection());
         String message = createJSON(msgObj);
         MiddleWareConnector task = new MiddleWareConnector(this,new MiddleWareConnector.TaskListener() {
             @Override
@@ -523,5 +523,27 @@ public class MainActivity extends AppCompatActivity
 
         task.execute(message);
 
+    }
+
+    private ArrayList<Integer> createSelection(){
+        ArrayList<Integer> selection = new ArrayList<>();
+
+        Spinner favoritSpinner = findViewById(R.id.FavoritsSpinner);
+        FavoritsSpinnerAdapter myAdapter = (FavoritsSpinnerAdapter)favoritSpinner.getAdapter();
+
+        for(FavoritsData f : myAdapter.getListState()){
+            if(!f.isSelected()){
+                //System.out.println(f.getTitle());
+                if(f.getTitle().contains(",")){
+                    String[] temp = f.getTitle().split(",");
+                    for(int i = 0;i<temp.length;i++){
+                        selection.add(Integer.valueOf(temp[i].trim()));
+                        //System.out.println(selection.get(i));
+                    }
+                }
+            }
+        }
+
+        return selection;
     }
 }
