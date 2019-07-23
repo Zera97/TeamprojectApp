@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -47,8 +48,8 @@ public class MyBusstopMarker extends Marker {
      * individuelle InfoWindow des Markers.
      */
     private void setMarkerSettings() {
-        double lat = Double.parseDouble(sonstigeParameter[2]);
-        double longi = Double.parseDouble(sonstigeParameter[1]);
+        double lat = Double.parseDouble(sonstigeParameter[1]);
+        double longi = Double.parseDouble(sonstigeParameter[2]);
         GeoPoint position = new GeoPoint(lat, longi);
         this.setPosition(position);
         this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -123,6 +124,15 @@ public class MyBusstopMarker extends Marker {
         }
 
         outerLayout.addView(innerLayout);
+
+        Button abfahrt = new Button(mainActivity);
+        abfahrt.setTextSize(16.0f);
+        abfahrt.setTextColor(Color.parseColor("#000000"));
+        abfahrt.setTypeface(null, Typeface.BOLD);
+        abfahrt.setText("Von hier fahren");
+        abfahrt.setTag("abfahrt");
+
+        outerLayout.addView(abfahrt);
         return outerLayout;
     }
 

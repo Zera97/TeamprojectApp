@@ -1,7 +1,9 @@
 package com.android.zera.teamproject_app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -61,16 +63,24 @@ public class MyInfoWindow extends InfoWindow {
         TextView txtTitle = (TextView) mView.findViewWithTag("header");
         txtTitle.setText(params[0]);
 
+        Button abfahrt = (Button) mView.findViewWithTag("abfahrt");
+        abfahrt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setSubtext("4");
+            }
+        });
+
         if (stop) {
-            setSubtext();
+            setSubtext("3");
         }
     }
 
     /**
      * Aufbereiten und Darstellen der Informationen zu den Buslinien.
      */
-    private void setSubtext() {
-        MessageData msgObj = new MessageData("APP", 0, "3");
+    private void setSubtext(String code) {
+        MessageData msgObj = new MessageData("APP", 0, code);
         int stopID = Integer.parseInt(params[3]);
         msgObj.setStopID(stopID);
         Date currentTime = Calendar.getInstance().getTime();
@@ -82,84 +92,63 @@ public class MyInfoWindow extends InfoWindow {
         MiddleWareConnector task = new MiddleWareConnector(mainContext, new MiddleWareConnector.TaskListener() {
             @Override
             public void onFinished(String result) {
-
-                System.out.println(result);
-
-                com.jayway.jsonpath.Configuration.setDefaults(new com.jayway.jsonpath.Configuration.Defaults() {
-
-                    private final JsonProvider jsonProvider = new GsonJsonProvider();
-                    private final MappingProvider mappingProvider = new GsonMappingProvider();
-
-                    @Override
-                    public JsonProvider jsonProvider() {
-                        return jsonProvider;
-                    }
-
-                    @Override
-                    public MappingProvider mappingProvider() {
-                        return mappingProvider;
-                    }
-
-                    @Override
-                    public Set<Option> options() {
-                        return EnumSet.noneOf(Option.class);
-                    }
-
-                });
+                //System.out.println(result);
 
                 Object document = Configuration.defaultConfiguration().jsonProvider().parse(result);
+                try {
+                    JsonArray lines = JsonPath.read(document, "$.stoptimes[*].line");
 
-                JsonArray lines = JsonPath.read(document, "$.stoptimes[*].line");
+                    JsonArray stops = JsonPath.read(document, "$.stoptimes[*].nextstop");
 
-                JsonArray stops = JsonPath.read(document, "$.stoptimes[*].nextstop");
+                    JsonArray times = JsonPath.read(document, "$.stoptimes[*].time");
 
-                JsonArray times = JsonPath.read(document, "$.stoptimes[*].time");
+                    JsonArray direction = JsonPath.read(document, "$.stoptimes[*].direction");
 
-                JsonArray direction = JsonPath.read(document, "$.stoptimes[*].direction");
+                    Gson converter = new Gson();
 
-                Gson converter = new Gson();
+                    Type type = new TypeToken<List<String>>() {}.getType();
 
-                Type type = new TypeToken<List<String>>() {
-                }.getType();
+                    List<String> list_lines = converter.fromJson(lines, type);
 
-                List<String> list_lines = converter.fromJson(lines, type);
+                    List<String> list_nextStop = converter.fromJson(stops, type);
 
-                List<String> list_nextStop = converter.fromJson(stops, type);
+                    List<String> list_times = converter.fromJson(times, type);
 
-                List<String> list_times = converter.fromJson(times, type);
+                    //List<String> list_directions = converter.fromJson(direction, type);
 
-                List<String> list_directions = converter.fromJson(direction, type);
+                    if (list_lines.isEmpty()) {
+                        deletePlatzhalter(0);
+                    } else {
+                        int anzahl = 0;
+                        while (anzahl < list_lines.size()) {
+                            TextView txtLine = (TextView) mView.findViewWithTag("linie" + anzahl);
+                            TextView txtZeit = (TextView) mView.findViewWithTag("zeit" + anzahl);
 
+                            String textLine = list_lines.get(anzahl) + " -> ";
 
-                if (list_lines.isEmpty()) {
-                    deletePlatzhalter(0);
-                } else {
-                    int anzahl = 0;
-                    while (anzahl < list_lines.size()) {
-                        TextView txtLine = (TextView) mView.findViewWithTag("linie" + anzahl);
-                        TextView txtZeit = (TextView) mView.findViewWithTag("zeit" + anzahl);
-
-                        String textLine = list_lines.get(anzahl) + " -> ";
-
-                        for (BusStopData data: myBusstopMarkers) {
-                            if(data.id == Integer.parseInt(list_nextStop.get(anzahl))){
-                                textLine += data.name;
+                            for (BusStopData data: myBusstopMarkers) {
+                                if(data.id == Integer.parseInt(list_nextStop.get(anzahl))){
+                                    textLine += data.name;
+                                }
                             }
+
+                            txtLine.setText(textLine);
+
+                            int temp  = Integer.valueOf(list_times.get(anzahl));
+
+                            String textTime = (temp / 60) + ":" + (temp%60);
+                            txtZeit.setText(textTime);
+
+                            anzahl++;
                         }
-
-                        txtLine.setText(textLine);
-
-                        int temp  = Integer.valueOf(list_times.get(anzahl));
-
-                        String textTime = (temp / 60) + ":" + (temp%60);
-
-                        txtZeit.setText(textTime);
-
-                        anzahl++;
+                        deletePlatzhalter(anzahl);
                     }
-                    deletePlatzhalter(anzahl);
+                } catch(Exception e){
+                   System.out.println("Middleware spinnt rum.");
+
                 }
             }
+
         });
 
         task.execute(message);
@@ -175,9 +164,10 @@ public class MyInfoWindow extends InfoWindow {
             TextView txtLine = (TextView) mView.findViewWithTag("linie" + 0);
             TextView txtZeit = (TextView) mView.findViewWithTag("zeit" + 0);
 
-            txtLine.setText("In nächster Zeit fährt von dieser Haltestelle kein Bus ab.");
+            txtLine.setText("Kein Bus");
             txtZeit.setText("");
             untereGrenze++;
+
         }
 
         for(int i = untereGrenze;i<5;i++){
@@ -187,6 +177,7 @@ public class MyInfoWindow extends InfoWindow {
             txtLine.setText("");
             txtZeit.setText("");
         }
+
     }
 
     /**

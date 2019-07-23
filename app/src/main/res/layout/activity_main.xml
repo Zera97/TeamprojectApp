@@ -35,13 +35,6 @@
             android:weightSum="1"
             >
 
-            <Button
-                android:id="@+id/btn_verbindung"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:visibility="visible"
-                android:text="TestVerbindung"
-                android:onClick="TestVerbindung"/>
             <Spinner
                 android:id="@+id/BusLineSpinner"
                 android:layout_width="100dp"

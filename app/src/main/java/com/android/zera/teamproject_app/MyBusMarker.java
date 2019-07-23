@@ -42,8 +42,9 @@ public class MyBusMarker extends Marker{
      * individuelle InfoWindow des Markers.
      */
     private void setMarkerSettings() {
-        double longi = Double.parseDouble(sonstigeParameter[2]);
+        //System.out.println("Lati: " + sonstigeParameter[1] + " longi: " + sonstigeParameter[2]);
         double lat = Double.parseDouble(sonstigeParameter[1]);
+        double longi = Double.parseDouble(sonstigeParameter[2]);
         GeoPoint position = new GeoPoint(lat,longi);
         this.setPosition(position);
         this.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);

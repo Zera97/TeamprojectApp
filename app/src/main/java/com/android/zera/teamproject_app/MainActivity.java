@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.ReadContext;
@@ -47,8 +48,10 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -64,7 +67,6 @@ public class MainActivity extends AppCompatActivity
     private Handler busHandler;
     private Runnable mHandlerTask;
     private final int INTERVAL = 10000 ;
-    private MyBusMarker marker;
     private ArrayList<MyBusMarker> busMarkers;
     private ArrayList<BusStopData> arrayOfBusstopDatas;
 
@@ -79,22 +81,11 @@ public class MainActivity extends AppCompatActivity
         myBusstopMarkers = new ArrayList<>();
 
         this.checkPermissions();
+        this.initJSONParser();
         this.initSidebar();
-        this.initMap();
         this.initBusLineSlider();
         this.initFavoritsSlider();
-        this.initJSONParser();
-
-        busHandler = new Handler();
-        mHandlerTask = new Runnable()
-        {
-            @Override
-            public void run() {
-                doSomething();
-                busHandler.postDelayed(mHandlerTask, INTERVAL);
-            }
-        };
-                this.startRepeatingTask();
+        this.initMap();
     }
 
 
@@ -117,7 +108,18 @@ public class MainActivity extends AppCompatActivity
         MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
         map.getOverlays().add(0, mapEventsOverlay);
 
+        this.placeAllBusStops();
 
+        busHandler = new Handler();
+        mHandlerTask = new Runnable()
+        {
+            @Override
+            public void run() {
+                placeAllBuses();
+                busHandler.postDelayed(mHandlerTask, INTERVAL);
+            }
+        };
+        this.startRepeatingTask();
 
     }
 
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void TestVerbindung(View v) {
+    public void placeAllBusStops() {
         boolean b = isNetworkAvailable();
         String testJSON = createJSON(new MessageData("APP", 0, "1"));
         if (b) {
@@ -170,7 +172,7 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     for(BusStopData bSD : arrayOfBusstopDatas){
-                        String[] values = {bSD.name,bSD.longitude,bSD.latitude,bSD.id + ""};
+                        String[] values = {bSD.name,bSD.latitude,bSD.longitude,bSD.id + ""};
                         MyBusstopMarker stop = new MyBusstopMarker(map,arrayOfBusstopDatas,values,context, res);
                         map.getOverlayManager().add(stop);
                         myBusstopMarkers.add(stop);
@@ -509,7 +511,7 @@ public class MainActivity extends AppCompatActivity
         busHandler.removeCallbacks(mHandlerTask);
     }
 
-    private void doSomething(){
+    private void placeAllBuses(){
 
         MessageData msgObj = new MessageData("APP", 0, "2");
         msgObj.setSelection(createSelection());
@@ -518,6 +520,36 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFinished(String result) {
                 System.out.println(result);
+
+                busMarkers = new ArrayList<>();
+
+                Object document = com.jayway.jsonpath.Configuration.defaultConfiguration().jsonProvider().parse(result);
+
+                JsonArray number = JsonPath.read(document, "$.bus[*].number");
+
+                JsonArray lati = JsonPath.read(document, "$.bus[*].latitude");
+
+                JsonArray longi = JsonPath.read(document, "$.bus[*].longitude");
+
+
+                Gson converter = new Gson();
+
+                Type type = new TypeToken<List<String>>() {}.getType();
+
+                List<String> list_number = converter.fromJson(number, type);
+
+                List<String> list_lati = converter.fromJson(lati, type);
+
+                List<String> list_longi = converter.fromJson(longi, type);
+
+
+                for(int i = 0;i<list_number.size();i++){
+                    String[] values = {list_number.get(i),list_lati.get(i),list_longi.get(i)};
+                    MyBusMarker bus = new MyBusMarker(map,values,context, res);
+                    map.getOverlayManager().add(bus);
+                    busMarkers.add(bus);
+                    map.invalidate();
+                }
             }
         });
 
