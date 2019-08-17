@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
                 busHandler.postDelayed(mHandlerTask, INTERVAL);
             }
         };
-        this.startRepeatingTask();
+        //this.startRepeatingTask();
 
     }
 
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity
 
                     ReadContext ctx = JsonPath.parse(result);
 
-                    JsonArray busStopData = ctx.read("$.busstops[*]");
+                    JsonArray busStopData = ctx.read("$.busstops[*].*.name");
 
                     BusStopData dummy;
                     arrayOfBusstopDatas = new ArrayList<>();
@@ -453,14 +453,14 @@ public class MainActivity extends AppCompatActivity
     //region Android Status (überschriebene On-Methoden)
     @Override
     public void onResume() {
-        System.out.print("HALLO HIER IN ON RESUME");
+        System.out.println("HALLO HIER IN ON RESUME");
         super.onResume();
         map.onResume();
     }
 
     @Override
     public void onPause() {
-        System.out.print("HALLO HIER IN ON PAUSE");
+        System.out.println("HALLO HIER IN ON PAUSE");
         super.onPause();
         map.onPause();
     }
@@ -496,7 +496,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onStop() {
-        System.out.print("Hallo hier in ON STOOOOOPPPPP");
+        System.out.println("Hallo hier in ON STOOOOOPPPPP");
         super.onStop();
     }
     //endregion

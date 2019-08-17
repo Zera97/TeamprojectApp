@@ -129,6 +129,7 @@ public class MiddleWareConnector extends AsyncTask<String, Integer, String> {
             fromServer = br.readLine();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("BLABLA" + fromServer + "HAHAHAH");
             return null;
         }
         System.out.println("Habe vom Server gelesen: " + fromServer);
