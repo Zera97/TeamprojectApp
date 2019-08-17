@@ -63,16 +63,16 @@ public class MyInfoWindow extends InfoWindow {
         TextView txtTitle = (TextView) mView.findViewWithTag("header");
         txtTitle.setText(params[0]);
 
-        Button abfahrt = (Button) mView.findViewWithTag("abfahrt");
-        abfahrt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSubtext("4");
-            }
-        });
-
         if (stop) {
             setSubtext("3");
+            Button abfahrt = (Button) mView.findViewWithTag("abfahrt");
+            abfahrt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //setSubtext("4");
+                    System.out.println("KLICK");
+                }
+            });
         }
     }
 

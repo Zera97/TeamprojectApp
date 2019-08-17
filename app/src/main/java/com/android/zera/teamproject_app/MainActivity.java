@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
                 busHandler.postDelayed(mHandlerTask, INTERVAL);
             }
         };
-        //this.startRepeatingTask();
+        this.startRepeatingTask();
 
     }
 
@@ -150,16 +150,17 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onFinished(String result) {
 
-                    System.out.println(result);
+                    System.out.println("Result: " + result);
 
                     ReadContext ctx = JsonPath.parse(result);
 
-                    JsonArray busStopData = ctx.read("$.busstops[*].*.name");
+                    JsonArray busStopData = ctx.read("$.busstops[*].name");
 
                     BusStopData dummy;
                     arrayOfBusstopDatas = new ArrayList<>();
 
                     int size = busStopData.size();
+                    //System.out.println("Size: " + size);
 
                     for(int i = 0;i <size;i++){
                         String read = "$.busstops[" + i + "]";
