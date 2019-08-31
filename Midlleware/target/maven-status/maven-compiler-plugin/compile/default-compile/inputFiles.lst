@@ -1,0 +1,17 @@
+/home/draven/HVB/src/main/java/de/hsharz/hvb/helper/ErrorCodes.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/database/wrapper/StopTime.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/Main.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/database/wrapper/BusStop.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/handler/AppHandler.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/database/wrapper/BusstopInformation.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/helper/JSONFactory.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/database/wrapper/Bus.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/helper/Column.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/database/DBConnection.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/server/Server.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/database/DBUtils.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/handler/interfaces/Handler.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/handler/BoxHandler.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/handler/WebHandler.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/database/wrapper/Bussignal.java
+/home/draven/HVB/src/main/java/de/hsharz/hvb/server/Worker.java

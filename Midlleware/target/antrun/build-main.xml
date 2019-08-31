@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <scp localFile="/home/draven/HVB/target/core-1.8.jar" remoteToFile="admin@eos-noctis.de:/home/admin/core" keyfile="/home/draven/.ssh/key_rsa" passphrase="" verbose="true"/>
+  <sshexec trust="true" keyfile="/home/draven/.ssh/key_rsa" host="eos-noctis.de" failonerror="true" passphrase="" command="sudo systemctl restart hvbserver.service" timeout="120000" username="admin"/>
+</target>
+</project>
